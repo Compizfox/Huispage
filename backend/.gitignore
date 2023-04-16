@@ -1,0 +1,9 @@
+## Python
+__pycache__/
+*.py[cod]
+
+## Django
+settings_local.py
+*.sqlite3
+
+storage/

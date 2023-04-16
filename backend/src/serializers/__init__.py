@@ -1,0 +1,6 @@
+from .InhabitantSerializer import InhabitantSerializer
+from .ExpenseSerializer import ExpenseSerializer
+from .DebitorSerializer import DebitorSerializer
+from .ExpenseCategorySerializer import ExpenseCategorySerializer
+from .MealSerializer import MealSerializer, EnrolmentSerializer
+from .EnrolmentSerializer import EnrolmentSerializer

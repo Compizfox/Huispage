@@ -1,0 +1,26 @@
+export default {
+	'en': {
+		'tabs.mealPlanning': 'Meal planning',
+		'tabs.expenses': 'Expenses',
+		'tabs.fridgeAccounting': 'Fridge accounting',
+		'tabs.stats': 'Stats',
+		'tabs.settings': 'Settings',
+		'to_cook': 'Cook',
+		'cooking': 'Cooking',
+		'this_week': 'This week',
+		'week': 'week',
+		'Date': 'Date',
+	},
+	'nl': {
+		'tabs.mealPlanning': 'Eetplanning',
+		'tabs.expenses': 'Uitgaven',
+		'tabs.fridgeAccounting': 'Bierlijst',
+		'tabs.stats': 'Stats',
+		'tabs.settings': 'Instellingen',
+		'to_cook': 'Koken',
+		'cooking': 'Kookt',
+		'this_week': 'Deze week',
+		'week': 'week',
+		'Date': 'Datum',
+	},
+}
