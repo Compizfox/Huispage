@@ -133,10 +133,10 @@ const loading = ref(true)
 const rows = ref([])
 
 const inhabitantBodyCellSlots = computed(() =>
-	inhabitantsStore.getInhabitants.map(inhabitant => 'body-cell-' + inhabitant.id)
+	inhabitantsStore.getCurrentInhabitants.map(inhabitant => 'body-cell-' + inhabitant.id)
 )
 const inhabitantHeaderCellSlots = computed(() =>
-	inhabitantsStore.getInhabitants.map(inhabitant => 'header-cell-' + inhabitant.id)
+	inhabitantsStore.getCurrentInhabitants.map(inhabitant => 'header-cell-' + inhabitant.id)
 )
 
 const pagination = {
@@ -224,7 +224,7 @@ onMounted(() => {
 				field: (row: any) => row.date,
 				format: (val: any) => date.formatDate(val, 'dddd YYYY-MM-DD'),
 			},
-		].concat(inhabitantsStore.getInhabitants.map(inhabitant => {
+		].concat(inhabitantsStore.getCurrentInhabitants.map(inhabitant => {
 			return {
 				name: inhabitant.id,
 				label: inhabitant.nickname,

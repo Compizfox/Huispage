@@ -5,5 +5,5 @@ from ..serializers import InhabitantSerializer
 
 
 class InhabitantViewSet(viewsets.ModelViewSet):
-	queryset = Inhabitant.objects.filter(date_leave__isnull=True)
+	queryset = Inhabitant.objects.all()
 	serializer_class = InhabitantSerializer

@@ -179,7 +179,7 @@ onMounted(() => {
 				field: row => row.unit_price,
 				format: val => (val ?? 0).toFixed(2),
 			}
-		].concat(inhabitantsStore.getInhabitants.map((inhabitant) => {
+		].concat(inhabitantsStore.getCurrentInhabitants.map((inhabitant) => {
 			return {
 				name: inhabitant.username,
 				required: true,
