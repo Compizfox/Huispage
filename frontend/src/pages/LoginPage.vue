@@ -22,7 +22,7 @@
 										v-model="email"
 										type="email"
 										label="Email address">
-										<template v-slot:prepend>
+										<template #prepend>
 											<q-icon name="email"/>
 										</template>
 									</q-input>
@@ -30,7 +30,7 @@
 										outlined
 										v-model="username"
 										type="username" label="Username">
-										<template v-slot:prepend>
+										<template #prepend>
 											<q-icon name="person"/>
 										</template>
 									</q-input>
@@ -40,7 +40,7 @@
 										type="password"
 										v-model="password"
 										label="Password">
-										<template v-slot:prepend>
+										<template #prepend>
 											<q-icon name="lock"/>
 										</template>
 									</q-input>
@@ -51,7 +51,7 @@
 										clearable
 										v-model="repassword"
 										label="Password confirmation">
-										<template v-slot:prepend>
+										<template #prepend>
 											<q-icon name="lock"/>
 										</template>
 									</q-input>

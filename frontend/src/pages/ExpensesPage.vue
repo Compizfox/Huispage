@@ -12,7 +12,7 @@
 			v-model:pagination="pagination"
 			@request="onRequest"
 		>
-			<template v-slot:body-cell-category="props">
+			<template #body-cell-category="props">
 				<q-td :props="props">
 					<q-icon :name="expenseCategoriesStore.getExpenseCategories.find(x => x.id === props.row.category).icon"
 									size="2em">
@@ -34,7 +34,7 @@
 				</q-td>
 			</template>
 
-			<template v-slot:top-left>
+			<template #top-left>
 				<div class="q-gutter-md row">
 					<q-select
 						filled
@@ -48,7 +48,7 @@
 						label="Category filter"
 						style="width: 10em"
 					>
-						<template v-slot:option="scope">
+						<template #option="scope">
 							<q-item v-bind="scope.itemProps">
 								<q-item-section avatar>
 									<q-icon :name="scope.opt.icon"/>

@@ -13,7 +13,7 @@
 			dense
 		>
 			<template
-				v-for="inhabitantSlot in inhabitantHeaderCellSlots" v-slot:[inhabitantSlot]="props"
+				v-for="inhabitantSlot in inhabitantHeaderCellSlots" #[inhabitantSlot]="props"
 				:key="inhabitantSlot"
 			>
 				<q-th :props="props">
@@ -25,7 +25,7 @@
 					</q-chip>
 				</q-th>
 			</template>
-			<template v-slot:body-cell-date="props">
+			<template #body-cell-date="props">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
 					<q-icon
 						name="today"
@@ -37,7 +37,7 @@
 					</q-btn>
 				</q-td>
 			</template>
-			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" v-slot:[inhabitantSlot]="props"
+			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
 					<router-link
@@ -58,7 +58,7 @@
 						:ripple="false"
 						flat
 					>
-						<template v-slot:label>
+						<template #label>
 							<q-checkbox
 								v-model="props.row.enrolments[props.col.name]"
 								:disable="props.value.readOnly"
@@ -72,7 +72,7 @@
 				</q-td>
 			</template>
 
-			<template v-slot:pagination>
+			<template #pagination>
 				<q-btn
 					icon="chevron_left"
 					color="grey-8"
