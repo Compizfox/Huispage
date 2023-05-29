@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
 					{
 						path: 'create',
 						name: 'createExpense',
-						component: () => import('components/ExpenseDetail.vue')
+						component: () => import('components/ExpenseCreate.vue')
 					},
 					{
 						path: ':id',

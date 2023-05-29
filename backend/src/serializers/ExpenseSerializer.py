@@ -10,14 +10,36 @@ class ExpenseSerializer(serializers.ModelSerializer):
 		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'total_amount', 'unit_price',
 		          'description')
 
-	debitors = DebitorSerializer(source='debitor_set', many=True)
+	debitors = DebitorSerializer(source='get_debitors', many=True)
 	creditor_id = serializers.PrimaryKeyRelatedField(source='creditor', queryset=Inhabitant.objects.all())
 	creditor_name = serializers.StringRelatedField(source='creditor')
 
 	def create(self, validated_data: dict) -> Expense:
 		# Handle creation for relation: create debitors
-		debitors_data = validated_data.pop('debitor_set')
+		debitors_data = validated_data.pop('get_debitors')
 		expense = Expense.objects.create(**validated_data)
 		for debitor_data in debitors_data:
-			Debitor.objects.create(expense=expense, **debitor_data)
+			if debitor_data['amount'] != 0:
+				Debitor.objects.create(expense=expense, **debitor_data)
 		return expense
+
+	def update(self, instance: Expense, validated_data: dict) -> Expense:
+		# Handle updating for relation: create/update/delete debitors
+		print(validated_data)
+		for debitor_data in validated_data.pop('get_debitors'):
+			try:
+				if debitor_data['amount']:
+					debitor = Debitor.objects.get(expense=instance, inhabitant=debitor_data['inhabitant'])
+					for key, value in debitor_data.items():
+						setattr(debitor, key, value)
+					debitor.save()
+				else:
+					Debitor.objects.filter(expense=instance, inhabitant=debitor_data['inhabitant']).delete()
+			except Debitor.DoesNotExist:
+				Debitor.objects.create(expense=instance, **debitor_data)
+
+		for attr, value in validated_data.items():
+			setattr(instance, attr, value)
+
+		instance.save()
+		return instance

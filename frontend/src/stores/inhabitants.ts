@@ -8,9 +8,6 @@ export const useInhabitantsStore = defineStore('inhabitants', {
 	}),
 
 	getters: {
-		getInhabitants(state) {
-			return state.inhabitants
-		},
 		getCurrentInhabitants(state) {
 			return state.inhabitants.filter(x => x.date_leave === null)
 		}

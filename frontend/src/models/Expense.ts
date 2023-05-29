@@ -1,5 +1,5 @@
 export interface Expense {
-	creditor_id: number,
+	creditor_id: number | null,
 	date: string,
 	description: string,
 	category: number | null,

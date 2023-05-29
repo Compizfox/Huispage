@@ -6,12 +6,6 @@ export const useExpenseCategoriesStore = defineStore('expenseCategories', {
 		expenseCategories: [],
 	}),
 
-	getters: {
-		getExpenseCategories(state) {
-			return state.expenseCategories
-		}
-	},
-
 	actions: {
 		async fetch() {
 			const response = await useAuthStore().request({url: 'expense_categories/', method: 'get'})

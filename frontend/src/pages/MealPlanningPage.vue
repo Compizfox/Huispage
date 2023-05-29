@@ -178,7 +178,7 @@ function onChangeCooking(date: string) {
 		url: 'meals/',
 		method: 'post',
 		data: {
-			cook: authStore.inhabitant.id,
+			cook: authStore.inhabitant?.id,
 			date: date,
 			ready_at: '18:00'
 		}
@@ -232,7 +232,8 @@ onMounted(() => {
 				field: (row: any) => {
 					return {
 						value: row.enrolments[inhabitant.id],
-						readOnly: inhabitant.username !== authStore.inhabitant.username && !authStore.inhabitant.is_superuser,
+						readOnly: inhabitant.username !== authStore.inhabitant?.username &&
+							!authStore.inhabitant?.is_superuser,
 					}
 				}
 			}
