@@ -32,7 +32,13 @@
 						v-if="isToday(props.row.date)"
 						size="md"
 					/>
-					<q-btn flat no-caps :label="props.value" @click="onChangeCooking(props.row.date)">
+					<q-btn
+						flat
+						no-caps
+						:label="props.value"
+						@click="onChangeCooking(props.row.date)"
+						:disabled="props.row.meal"
+					>
 						<q-tooltip>{{ $t('to_cook') }}</q-tooltip>
 					</q-btn>
 				</q-td>
