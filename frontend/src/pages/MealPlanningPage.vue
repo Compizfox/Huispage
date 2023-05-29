@@ -10,14 +10,13 @@
 			:pagination="pagination"
 			:rows-per-page-options="[]"
 			separator="cell"
-			dense
 		>
 			<template
 				v-for="inhabitantSlot in inhabitantHeaderCellSlots" #[inhabitantSlot]="props"
 				:key="inhabitantSlot"
 			>
 				<q-th :props="props">
-					<q-chip>
+					<q-chip :dense="$q.screen.lt.sm">
 						<q-avatar>
 							<img src="https://cdn.quasar.dev/img/boy-avatar.png">
 						</q-avatar>
@@ -30,12 +29,13 @@
 					<q-icon
 						name="today"
 						v-if="isToday(props.row.date)"
-						size="md"
 					/>
 					<q-btn
 						flat
 						no-caps
-						:label="props.value"
+						padding="xs"
+						:label="$q.screen.gt.sm ? date.formatDate(props.value, 'dddd YYYY-MM-DD') : date.formatDate(props.value,
+						'dd')"
 						@click="onChangeCooking(props.row.date)"
 						:disabled="props.row.meal"
 					>
@@ -52,29 +52,16 @@
 					>
 						<q-icon
 							name="restaurant"
-							size="xl"
 						>
 							<q-tooltip>{{ props.col.label }} {{ $t('cooking') }}</q-tooltip>
 						</q-icon>
 					</router-link>
-
-					<q-btn-dropdown
-						split
-						:disable-dropdown="props.value.readOnly"
-						:ripple="false"
-						flat
-					>
-						<template #label>
-							<q-checkbox
-								v-model="props.row.enrolments[props.col.name]"
-								:disable="props.value.readOnly"
-								checked-icon="chair_alt"
-								size="xs"
-								@update:model-value="(value, evt) => onChangeEnrolmentCheckbox(props.col.name, props.row.date, value)"
-							/>
-						</template>
-
-					</q-btn-dropdown>
+					<q-checkbox
+						v-model="props.row.enrolments[props.col.name]"
+						:disable="props.value.readOnly"
+						checked-icon="chair_alt"
+						@update:model-value="(value, evt) => onChangeEnrolmentCheckbox(props.col.name, props.row.date, value)"
+					/>
 				</q-td>
 			</template>
 
@@ -228,7 +215,6 @@ onMounted(() => {
 				classes: 'q-table--col-auto-width',
 				headerClasses: 'q-table--col-auto-width',
 				field: (row: any) => row.date,
-				format: (val: any) => date.formatDate(val, 'dddd YYYY-MM-DD'),
 			},
 		].concat(inhabitantsStore.getCurrentInhabitants.map(inhabitant => {
 			return {
@@ -249,3 +235,19 @@ onMounted(() => {
 })
 
 </script>
+
+<style lang="scss">
+.q-table .q-icon {
+	font-size: 30px;
+	@media (min-width: $breakpoint-sm-min) {
+		font-size: 40px;
+	}
+}
+
+.q-table th, .q-table td {
+	padding: 4px 8px;
+	@media (max-width: $breakpoint-sm-min) {
+		padding: 4px 4px;
+	}
+}
+</style>
