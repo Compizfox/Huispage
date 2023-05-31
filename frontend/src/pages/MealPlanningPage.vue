@@ -123,6 +123,7 @@ import {useI18n} from 'vue-i18n'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {date, useQuasar} from 'quasar';
 
+import type {Day} from 'src/models/Day'
 
 const {t} = useI18n()
 const $q = useQuasar()
@@ -142,7 +143,7 @@ function isToday(dateString: string): boolean {
 
 const columns = ref()
 const loading = ref(true)
-const rows = ref([])
+const rows: Ref<Array<Day>> = ref([])
 
 const inhabitantBodyCellSlots = computed(() =>
 	inhabitantsStore.getCurrentInhabitants.map(inhabitant => 'body-cell-' + inhabitant.id)
