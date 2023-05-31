@@ -121,14 +121,14 @@ import {useAuthStore} from 'stores/auth'
 import {computed, onMounted, Ref, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {onBeforeRouteUpdate} from 'vue-router'
-import {date, useQuasar} from 'quasar';
+import {date, useQuasar} from 'quasar'
 
 import type {Day} from 'src/models/Day'
 
 const {t} = useI18n()
 const $q = useQuasar()
 
-const inhabitantsStore = useInhabitantsStore();
+const inhabitantsStore = useInhabitantsStore()
 const authStore = useAuthStore()
 
 let currentDate = new Date()

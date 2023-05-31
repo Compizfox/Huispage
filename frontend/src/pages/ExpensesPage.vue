@@ -113,7 +113,7 @@ import {useSettingsStore} from 'stores/settings'
 const inhabitantsStore = useInhabitantsStore()
 const expenseCategoriesStore = useExpenseCategoriesStore()
 const authStore = useAuthStore()
-const settingsStore = useSettingsStore();
+const settingsStore = useSettingsStore()
 
 const loading = ref(true)
 const rows = ref([])

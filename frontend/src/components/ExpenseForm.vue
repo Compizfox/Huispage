@@ -90,7 +90,7 @@
 import {onMounted, computed} from 'vue'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useExpenseCategoriesStore} from 'stores/expenseCategories'
-import type {Expense} from '../models/Expense'
+import type {Expense} from 'src/models/Expense'
 import {useAuthStore} from 'stores/auth'
 
 const expenseCategoriesStore = useExpenseCategoriesStore()

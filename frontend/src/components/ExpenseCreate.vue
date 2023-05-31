@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import {ref, Ref} from 'vue';
-import {Expense} from 'src/models/Expense';
+import type {Expense} from 'src/models/Expense'
 import {date} from 'quasar';
 import ExpenseForm from 'components/ExpenseForm.vue';
 import NestedCardDialog from 'components/NestedCardDialog.vue';
