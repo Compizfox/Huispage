@@ -6,4 +6,4 @@ from ..models import Enrolment
 class EnrolmentSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Enrolment
-		fields = ('inhabitant', 'date', 'note', 'num_guests', 'value', 'created_at', 'updated_at')
+		fields = ('inhabitant', 'date', 'note', 'n', 'created_at', 'updated_at')

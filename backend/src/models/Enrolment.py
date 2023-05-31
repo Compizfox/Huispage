@@ -11,8 +11,7 @@ class Enrolment(models.Model):
 	inhabitant = models.ForeignKey(Inhabitant, on_delete=models.CASCADE, related_name='enrolments')
 	date = models.DateField()
 	note = models.CharField(max_length=100, blank=True)
-	num_guests = models.PositiveIntegerField(default=0)
-	value = models.BooleanField()
+	n = models.PositiveIntegerField(default=1)
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)

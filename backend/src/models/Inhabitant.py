@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 
 
 class Inhabitant(models.Model):
-	def default_enrolment_preference() -> dict[int, bool]:
+	def default_enrolment_preference() -> dict[int, int]:
 		return {
-			0: True,
-			1: True,
-			2: True,
-			3: True,
-			4: True,
-			5: False,
-			6: False,
+			0: 1,
+			1: 1,
+			2: 1,
+			3: 1,
+			4: 1,
+			5: 0,
+			6: 0,
 		}
 
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -43,10 +43,10 @@ class Inhabitant(models.Model):
 
 		super().save()
 
-	def get_enrolment_preference(self, date: datetime.date) -> bool:
+	def get_enrolment_preference(self, date: datetime.date) -> int:
 		# JSON field is indexed by strings
 		return self.enrolment_preference[str(date.weekday())]
 
-	def get_enrolment_or_preference(self, date: datetime.date) -> bool:
+	def get_enrolment_or_preference(self, date: datetime.date) -> int:
 		enrolment = self.enrolments.filter(date=date)
-		return enrolment[0].value if enrolment.exists() else self.get_enrolment_preference(date)
+		return enrolment[0].n if enrolment.exists() else self.get_enrolment_preference(date)

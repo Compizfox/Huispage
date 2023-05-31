@@ -57,11 +57,29 @@
 						</q-icon>
 					</router-link>
 					<q-checkbox
-						v-model="props.row.enrolments[props.col.name]"
+						:model-value="isEnrolled(props.row.enrolments[props.col.name])"
 						:disable="props.value.readOnly"
 						checked-icon="chair_alt"
-						@update:model-value="(value, evt) => onChangeEnrolmentCheckbox(props.col.name, props.row.date, value)"
+						@update:model-value="(value, evt) =>
+						onChangeEnrolmentCheckbox(props.rowIndex, props.col.name, props.row.date, value)"
 					/>
+					<div class="row inline cursor-pointer">
+						<q-input
+							type="number"
+							v-if="props.row.enrolments[props.col.name] > 0"
+							:model-value="getNumGuests(props.row.enrolments[props.col.name])"
+							@update:model-value="(value, evt) =>
+						onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
+							:disable="props.value.readOnly"
+							min="0"
+							max="99"
+							dense
+						/>
+						<q-tooltip>
+							Guests
+						</q-tooltip>
+					</div>
+
 				</q-td>
 			</template>
 
@@ -100,10 +118,11 @@
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useAuthStore} from 'stores/auth'
 
-import {computed, onMounted, ref} from 'vue'
+import {computed, onMounted, Ref, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {date, useQuasar} from 'quasar';
+
 
 const {t} = useI18n()
 const $q = useQuasar()
@@ -147,14 +166,28 @@ function fetch() {
 	})
 }
 
-function onChangeEnrolmentCheckbox(inhabitant_id: number, date: string, value: boolean) {
+function onChangeEnrolmentCheckbox(row_id: number, inhabitant_id: number, date: string, value: boolean) {
+	let n = value ? 1 : 0
+	rows.value[row_id].enrolments[inhabitant_id] = n
+
+	postEnrolments(inhabitant_id, date, n)
+}
+
+function onChangeNumGuests(row_id: number, inhabitant_id: number, date: string, value: number) {
+	let n = Number(value) + 1
+	rows.value[row_id].enrolments[inhabitant_id] = n
+
+	postEnrolments(inhabitant_id, date, n)
+}
+
+function postEnrolments(inhabitant_id: number, date: string, value: number) {
 	authStore.request({
 		url: 'enrolments/',
 		method: 'post',
 		data: {
 			inhabitant: inhabitant_id,
 			date: date,
-			value: value
+			n: value
 		}
 	}).then(() => {
 		$q.notify({
@@ -199,6 +232,14 @@ function changeWeek(amount: number) {
 	currentDate = date.addToDate(currentDate, {days: 7*amount})
 	loading.value = true
 	fetch()
+}
+
+function isEnrolled(n: number) {
+	return n > 0
+}
+
+function getNumGuests(n: number) {
+	return n - 1
 }
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -249,5 +290,9 @@ onMounted(() => {
 	@media (max-width: $breakpoint-sm-min) {
 		padding: 4px 4px;
 	}
+}
+
+.q-table input[type="number"] {
+	width: 2rem;
 }
 </style>

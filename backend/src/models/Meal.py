@@ -29,4 +29,4 @@ class Meal(models.Model):
 		# Make enrolment preferences explicit for this date
 		for inhabitant in Inhabitant.objects.filter(date_leave__isnull=True):
 			Enrolment.objects.get_or_create(inhabitant=inhabitant, date=self.date,
-			                                defaults={'value': inhabitant.get_enrolment_preference(self.date)})
+			                                defaults={'n': inhabitant.get_enrolment_preference(self.date)})
