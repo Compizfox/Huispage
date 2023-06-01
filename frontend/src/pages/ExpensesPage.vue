@@ -27,7 +27,8 @@
 			<template #body-cell-edit="props">
 				<q-td :props="props">
 					<router-link
-						v-if="props.row.creditor_id === authStore.inhabitant?.id || authStore.inhabitant?.is_superuser"
+						v-if="props.row.creditor_id === authStore.inhabitant?.id ||
+						(authStore.inhabitant?.is_superuser && settingsStore.adminMode)"
 						:to="{ name: 'expenseDetail', params: { id: props.row.id }}"
 					>
 						<q-icon name="edit"/>
@@ -87,7 +88,11 @@
 						v-model="settingsStore.showAllInhabitants"
 						label="Show all inhabitants"
 					/>
-
+					<q-checkbox
+						v-if="authStore.inhabitant?.is_superuser"
+						v-model="settingsStore.adminMode"
+						label="Admin mode"
+					/>
 				</div>
 			</template>
 			<template #top-right>
