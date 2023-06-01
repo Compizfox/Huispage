@@ -66,7 +66,8 @@
 					<div class="row inline cursor-pointer">
 						<q-input
 							type="number"
-							v-if="props.row.enrolments[props.col.name] > 0"
+							v-if="props.row.enrolments[props.col.name] > 1 || props.row.enrolments[props.col.name] > 0
+							&& !props.value.readOnly"
 							:model-value="getNumGuests(props.row.enrolments[props.col.name])"
 							@update:model-value="(value, evt) =>
 						onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
