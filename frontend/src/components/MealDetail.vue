@@ -16,12 +16,14 @@
 					option-label="nickname"
 					v-model="mealModel.cook"
 					label="Cook"
+					:disable="readOnly"
 				/>
 
 				<q-input
 					outlined
 					v-model="mealModel.description"
 					label="Omschrijving"
+					:disable="readOnly"
 				/>
 
 				<q-input
@@ -30,6 +32,7 @@
 					type="time"
 					hint="Ready at"
 					step="60"
+					:disable="readOnly"
 				/>
 			</q-card-section>
 
@@ -42,6 +45,7 @@
 					color="negative"
 					@click="onDelete"
 					v-close-popup
+					v-if="!readOnly"
 				/>
 				<q-btn
 					flat
@@ -51,6 +55,7 @@
 					type="submit"
 					color="primary"
 					v-close-popup
+					v-if="!readOnly"
 				/>
 			</q-card-actions>
 		</q-form>
@@ -65,11 +70,13 @@ import {useAuthStore} from 'stores/auth'
 
 import type {Meal} from 'src/models/Meal'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
+import {useSettingsStore} from 'stores/settings'
 
 const route = useRoute()
 
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore()
+const settingsStore = useSettingsStore()
 
 
 const mealModel: Ref<Meal> = ref({
@@ -82,6 +89,8 @@ const mealModel: Ref<Meal> = ref({
 	ready_at: '',
 })
 const url = 'meals/' + route.params.id + '/'
+const readOnly = ref(mealModel.value.cook !== authStore.inhabitant?.id &&
+	(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode))
 
 function fetch() {
 	authStore.request({
