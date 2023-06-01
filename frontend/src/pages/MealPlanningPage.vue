@@ -34,7 +34,7 @@
 						flat
 						no-caps
 						padding="xs"
-						:label="$q.screen.gt.sm ? date.formatDate(props.value, 'dddd YYYY-MM-DD') : date.formatDate(props.value,
+						:label="$q.screen.gt.sm ? date.formatDate(props.value, 'dd YYYY-MM-DD') : date.formatDate(props.value,
 						'dd')"
 						@click="onChangeCooking(props.row.date)"
 						:disabled="props.row.meal"
