@@ -40,7 +40,7 @@
 				<q-td :props="props">
 					<q-badge
 						:class="{ 'bg-deep-orange': props.col.name === props.row.creditor_name }"
-						v-if="props.value"
+						v-if="props.value || props.col.name === props.row.creditor_name"
 					>
 						{{ props.value }}
 					</q-badge>
