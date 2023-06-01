@@ -106,14 +106,17 @@
 	</q-page>
 </template>
 
-<script setup>
-import {onMounted, ref, computed} from 'vue'
+<script setup lang="ts">
+import {onMounted, ref, Ref, computed} from 'vue'
 import {date} from 'quasar'
-import {useInhabitantsStore} from 'stores/inhabitants.ts'
-import {useExpenseCategoriesStore} from 'stores/expenseCategories.ts'
-import {useAuthStore} from 'stores/auth'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {useSettingsStore} from 'stores/settings'
+
+import {useInhabitantsStore} from 'stores/inhabitants'
+import {useExpenseCategoriesStore} from 'stores/expenseCategories'
+import {useAuthStore} from 'stores/auth'
+
+import type {Expense} from 'src/models/Expense'
 
 const inhabitantsStore = useInhabitantsStore()
 const expenseCategoriesStore = useExpenseCategoriesStore()
@@ -121,7 +124,7 @@ const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 
 const loading = ref(true)
-const rows = ref([])
+const rows: Ref<Array<Expense>> = ref([])
 const pagination = ref({
 	sortBy: 'desc',
 	descending: false,
