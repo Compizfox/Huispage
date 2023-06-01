@@ -111,6 +111,14 @@
 					@click="changeWeek(1)"
 				/>
 			</template>
+
+			<template #top-right>
+				<q-checkbox
+					v-if="authStore.inhabitant?.is_superuser"
+					v-model="settingsStore.adminMode"
+					label="Admin mode"
+				/>
+			</template>
 		</q-table>
 	</q-page>
 </template>
@@ -118,6 +126,7 @@
 <script setup lang="ts">
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useAuthStore} from 'stores/auth'
+import {useSettingsStore} from 'stores/settings'
 
 import {computed, onMounted, Ref, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -131,6 +140,7 @@ const $q = useQuasar()
 
 const inhabitantsStore = useInhabitantsStore()
 const authStore = useAuthStore()
+const settingsStore = useSettingsStore()
 
 let currentDate = new Date()
 
@@ -268,7 +278,7 @@ onMounted(() => {
 					return {
 						value: row.enrolments[inhabitant.id],
 						readOnly: inhabitant.username !== authStore.inhabitant?.username &&
-							!authStore.inhabitant?.is_superuser,
+							(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode ),
 					}
 				}
 			}
