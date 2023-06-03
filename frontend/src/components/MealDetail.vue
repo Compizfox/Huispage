@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, Ref, ref} from 'vue'
+import {computed, onMounted, Ref, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useAuthStore} from 'stores/auth'
@@ -89,7 +89,7 @@ const mealModel: Ref<Meal> = ref({
 	ready_at: '',
 })
 const url = 'meals/' + route.params.id + '/'
-const readOnly = ref(mealModel.value.cook !== authStore.inhabitant?.id &&
+const readOnly = computed(() => mealModel.value.cook !== authStore.inhabitant?.id &&
 	(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode))
 
 function fetch() {
