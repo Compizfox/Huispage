@@ -24,6 +24,7 @@ from .views import (
 	EnrolmentViewSet,
 	DailiesView,
 	MealViewSet,
+	ExpenseImportView,
 	set_csrf_token, login, logout)
 
 router = routers.SimpleRouter()
@@ -37,6 +38,7 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 
 	path('api/dailies/<int:year>/<int:week>/', DailiesView.as_view()),
+	path('api/admin/expensesimport/', ExpenseImportView.as_view()),
 
 	path('api/auth/set_csrf_token', set_csrf_token),
 	path('api/auth/login', login),

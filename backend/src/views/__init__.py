@@ -4,4 +4,5 @@ from .ExpenseCategoryViewSet import ExpenseCategoryViewSet
 from .MealViewSet import MealViewSet
 from .Dailies import DailiesView
 from .EnrolmentViewSet import EnrolmentViewSet
+from .ExpenseImportView import ExpenseImportView
 from .auth import *
