@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, Ref, computed} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import {date} from 'quasar'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {useSettingsStore} from 'stores/settings'
@@ -117,6 +117,8 @@ import {useExpenseCategoriesStore} from 'stores/expenseCategories'
 import {useAuthStore} from 'stores/auth'
 
 import type {Expense} from 'src/models/Expense'
+import type {QTableProps} from 'quasar'
+import type {Ref} from 'vue'
 
 const inhabitantsStore = useInhabitantsStore()
 const expenseCategoriesStore = useExpenseCategoriesStore()
@@ -126,11 +128,11 @@ const settingsStore = useSettingsStore()
 const loading = ref(true)
 const rows: Ref<Array<Expense>> = ref([])
 const pagination = ref({
-	sortBy: 'desc',
-	descending: false,
+	sortBy: 'date',
+	descending: true,
 	page: 1,
-	rowsPerPage: 3,
-	rowsNumber: 10
+	rowsPerPage: 25,
+	rowsNumber: 0,
 })
 
 const columns = computed(() => [
@@ -139,38 +141,47 @@ const columns = computed(() => [
 		required: true,
 		label: '',
 		align: 'center',
-		field: row => row.category,
+		field: (row: Expense) => row.category,
+	},
+	{
+		name: 'updated_at',
+		required: true,
+		label: 'Added',
+		sortable: true,
+		field: (row: Expense) => row.updated_at,
+		format: (val: string) => date.formatDate(val, 'YYYY-MM-DD'),
 	},
 	{
 		name: 'date',
 		required: true,
 		label: 'Datum',
 		align: 'left',
-		field: row => row.date,
-		format: val => date.formatDate(val, 'YYYY-MM-DD'),
+		sortable: true,
+		field: (row: Expense) => row.date,
+		format: (val: string) => date.formatDate(val, 'YYYY-MM-DD'),
 	},
 	{
 		name: 'description',
 		required: true,
 		label: 'Description',
 		align: 'left',
-		field: row => row.description,
+		field: (row: Expense) => row.description,
 	},
 	{
 		name: 'total_amount',
 		required: true,
 		label: 'Total',
 		align: 'right',
-		field: row => row.total_amount,
-		format: val => (val ?? 0).toFixed(2),
+		field: (row: Expense) => row.total_amount,
+		format: (val: number) => (val ?? 0).toFixed(2),
 	},
 	{
 		name: 'unit_price',
 		required: true,
 		label: 'pp',
 		align: 'right',
-		field: row => row.unit_price,
-		format: val => (val ?? 0).toFixed(2),
+		field: (row: Expense) => row.unit_price,
+		format: (val: number) => (val ?? 0).toFixed(2),
 	}
 ].concat(getInhabitants.value.map((inhabitant) => {
 	return {
@@ -199,9 +210,9 @@ const getInhabitants = computed(() =>
 	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
 )
 
-function onRequest(props) {
+const onRequest: QTableProps['onRequest'] = (requestProp) => {
 	loading.value = true
-
+	pagination.value = Object.assign(pagination.value, requestProp.pagination);
 	fetch()
 }
 
@@ -217,9 +228,13 @@ function fetch() {
 		params: {
 			category: filter.value.category,
 			creditor: filter.value.creditor,
+			ordering: (pagination.value.descending? '-' : '') + pagination.value.sortBy,
+			page: pagination.value.page,
+			page_size: pagination.value.rowsPerPage,
 		}
 	}).then(response => {
-		rows.value = response?.data
+		pagination.value.rowsNumber = response?.data.count
+		rows.value = response?.data.results
 	}).finally(() => {
 		loading.value = false
 	})

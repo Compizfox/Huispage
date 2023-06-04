@@ -7,8 +7,8 @@ from .DebitorSerializer import DebitorSerializer
 class ExpenseSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Expense
-		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'total_amount', 'unit_price',
-		          'description')
+		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'created_at', 'updated_at',
+		          'total_amount', 'unit_price', 'description')
 
 	debitors = DebitorSerializer(source='get_debitors', many=True)
 	creditor_id = serializers.PrimaryKeyRelatedField(source='creditor', queryset=Inhabitant.objects.all())
