@@ -25,6 +25,7 @@ from .views import (
 	DailiesView,
 	MealViewSet,
 	ExpenseImportView,
+	get_balance,
 	set_csrf_token, login, logout)
 
 router = routers.SimpleRouter()
@@ -39,6 +40,7 @@ urlpatterns = [
 
 	path('api/dailies/<int:year>/<int:week>/', DailiesView.as_view()),
 	path('api/admin/expensesimport/', ExpenseImportView.as_view()),
+	path('api/balance/', get_balance),
 
 	path('api/auth/set_csrf_token', set_csrf_token),
 	path('api/auth/login', login),

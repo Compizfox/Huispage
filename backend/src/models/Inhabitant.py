@@ -23,6 +23,7 @@ class Inhabitant(models.Model):
 	enrolment_preference = models.JSONField(default=default_enrolment_preference)
 	avatar = models.ImageField(blank=True)
 	language = models.CharField(max_length=2)
+	start_balance = models.DecimalField(max_digits=5, decimal_places=2)
 
 	date_of_birth = models.DateField()
 	date_entrance = models.DateField()
@@ -50,3 +51,7 @@ class Inhabitant(models.Model):
 	def get_enrolment_or_preference(self, date: datetime.date) -> int:
 		enrolment = self.enrolments.filter(date=date)
 		return enrolment[0].n if enrolment.exists() else self.get_enrolment_preference(date)
+
+	def get_balance(self) -> float:
+		return sum([-debitor.expense.unit_price * debitor.amount for debitor in self.debitor_set.all()] +
+		           [expense.total_amount for expense in self.paid_expenses.all()]) + self.start_balance

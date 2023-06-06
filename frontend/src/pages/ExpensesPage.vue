@@ -1,6 +1,31 @@
 <template>
-	<q-page>
+	<q-page class="q-gutter-y-md">
 		<router-view></router-view>
+
+		<div class="row q-gutter-md">
+			<q-card
+				v-for="inhabitant in getInhabitants" :key="inhabitant"
+			>
+				<q-item>
+					<q-item-section avatar>
+						<q-avatar>
+							<img :src="inhabitant.avatar">
+						</q-avatar>
+					</q-item-section>
+
+					<q-item-section>
+						<q-item-label>{{ inhabitant.nickname }}</q-item-label>
+						<q-item-label
+							caption
+							:class="{'text-positive': balance[inhabitant.id]>0,
+					                 'text-negative': balance[inhabitant.id]<0 }"
+						>
+							€ {{ balance[inhabitant.id]?.toFixed(2) }}
+						</q-item-label>
+					</q-item-section>
+				</q-item>
+			</q-card>
+		</div>
 
 		<q-table
 			dense
@@ -141,6 +166,7 @@ const columns = computed(() => [
 		required: true,
 		label: '',
 		align: 'center',
+		sortable: true,
 		field: (row: Expense) => row.category,
 	},
 	{
@@ -210,6 +236,8 @@ const getInhabitants = computed(() =>
 	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
 )
 
+const balance = ref({})
+
 const onRequest: QTableProps['onRequest'] = (requestProp) => {
 	loading.value = true
 	pagination.value = Object.assign(pagination.value, requestProp.pagination);
@@ -243,6 +271,13 @@ function fetch() {
 onMounted(() => {
 	expenseCategoriesStore.fetch()
 	inhabitantsStore.fetch()
+
+	authStore.request({
+		url: 'balance/',
+		method: 'get',
+	}).then(response => {
+		balance.value = response?.data
+	})
 
 	fetch()
 })
