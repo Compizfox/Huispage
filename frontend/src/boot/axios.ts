@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-	baseURL: 'http://localhost:8080/api/',
+	baseURL: process.env.API_ENDPOINT + '/api/',
 	// Include the CSRF token from the cookie in the X-CSRFToken header
 	xsrfHeaderName: 'X-CSRFToken',
 	xsrfCookieName: 'csrftoken',
