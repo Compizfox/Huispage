@@ -2,7 +2,7 @@
 	<NestedCardDialog>
 		<template #title>
 			<q-icon name="receipt_long"/>
-			New expense
+			{{t('new_expense')}}
 		</template>
 		<ExpenseForm v-model="expense" @onSubmit="onSubmit"/>
 		<q-card-actions align="right">
@@ -20,14 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import {ref, Ref} from 'vue';
-import type {Expense} from 'src/models/Expense'
-import {date} from 'quasar';
-import ExpenseForm from 'components/ExpenseForm.vue';
-import NestedCardDialog from 'components/NestedCardDialog.vue';
+import {ref, Ref} from 'vue'
+import {date} from 'quasar'
+import ExpenseForm from 'components/ExpenseForm.vue'
+import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
 import {useInhabitantsStore} from 'stores/inhabitants'
+import {useI18n} from 'vue-i18n'
 
+import type {Expense} from 'src/models/Expense'
+
+const {t} = useI18n()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
 

@@ -111,12 +111,12 @@
 					/>
 					<q-checkbox
 						v-model="settingsStore.showAllInhabitants"
-						label="Show all inhabitants"
+						:label="$t('show_all_inhabitants')"
 					/>
 					<q-checkbox
 						v-if="authStore.inhabitant?.is_superuser"
 						v-model="settingsStore.adminMode"
-						label="Admin mode"
+						:label="$t('admin_mode')"
 					/>
 				</div>
 			</template>
@@ -124,7 +124,7 @@
 				<router-link
 					:to="{ name: 'createExpense' }"
 				>
-					<q-btn color="primary" label="Nieuw"/>
+					<q-btn color="primary" :label="$t('new')"/>
 				</router-link>
 			</template>
 		</q-table>
@@ -136,6 +136,7 @@ import {onMounted, ref, computed} from 'vue'
 import {date} from 'quasar'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {useSettingsStore} from 'stores/settings'
+import {useI18n} from 'vue-i18n'
 
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useExpenseCategoriesStore} from 'stores/expenseCategories'
@@ -145,6 +146,7 @@ import type {Expense} from 'src/models/Expense'
 import type {QTableProps} from 'quasar'
 import type {Ref} from 'vue'
 
+const {t} = useI18n()
 const inhabitantsStore = useInhabitantsStore()
 const expenseCategoriesStore = useExpenseCategoriesStore()
 const authStore = useAuthStore()
@@ -172,7 +174,7 @@ const columns = computed(() => [
 	{
 		name: 'updated_at',
 		required: true,
-		label: 'Added',
+		label: t('added_at'),
 		sortable: true,
 		field: (row: Expense) => row.updated_at,
 		format: (val: string) => date.formatDate(val, 'YYYY-MM-DD'),
@@ -180,7 +182,7 @@ const columns = computed(() => [
 	{
 		name: 'date',
 		required: true,
-		label: 'Datum',
+		label: t('date'),
 		align: 'left',
 		sortable: true,
 		field: (row: Expense) => row.date,
@@ -189,14 +191,14 @@ const columns = computed(() => [
 	{
 		name: 'description',
 		required: true,
-		label: 'Description',
+		label: t('description'),
 		align: 'left',
 		field: (row: Expense) => row.description,
 	},
 	{
 		name: 'total_amount',
 		required: true,
-		label: 'Total',
+		label: t('total'),
 		align: 'right',
 		field: (row: Expense) => row.total_amount,
 		format: (val: number) => (val ?? 0).toFixed(2),

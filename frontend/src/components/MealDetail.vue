@@ -2,7 +2,7 @@
 	<NestedCardDialog>
 		<template #title>
 			<q-icon name="restaurant"/>
-			Kookbeurt {{ mealModel.date }}
+			{{ $t('meal') }} {{ mealModel.date }}
 		</template>
 
 		<q-form @submit="onSubmit()">
@@ -15,14 +15,14 @@
 					option-value="id"
 					option-label="nickname"
 					v-model="mealModel.cook"
-					label="Cook"
+					:label="$t('cook')"
 					:disable="readOnly"
 				/>
 
 				<q-input
 					outlined
 					v-model="mealModel.description"
-					label="Omschrijving"
+					:label="$t('description')"
 					:disable="readOnly"
 				/>
 
@@ -30,7 +30,7 @@
 					outlined
 					v-model="mealModel.ready_at"
 					type="time"
-					hint="Ready at"
+					:hint="$t('ready_at')"
 					step="60"
 					:disable="readOnly"
 				/>
@@ -71,9 +71,11 @@ import {useAuthStore} from 'stores/auth'
 import type {Meal} from 'src/models/Meal'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useSettingsStore} from 'stores/settings'
+import {useI18n} from 'vue-i18n'
 
 const route = useRoute()
 
+const {t} = useI18n()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore()
 const settingsStore = useSettingsStore()
@@ -120,7 +122,3 @@ onMounted(() => {
 	fetch()
 })
 </script>
-
-<style scoped>
-
-</style>

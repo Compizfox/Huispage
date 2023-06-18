@@ -10,6 +10,7 @@
 			:pagination="pagination"
 			:rows-per-page-options="[]"
 			separator="cell"
+			id="mealPlanning"
 		>
 			<template
 				v-for="inhabitantSlot in inhabitantHeaderCellSlots" #[inhabitantSlot]="props"
@@ -116,7 +117,7 @@
 				<q-checkbox
 					v-if="authStore.inhabitant?.is_superuser"
 					v-model="settingsStore.adminMode"
-					label="Admin mode"
+					:label="$t('admin_mode')"
 				/>
 			</template>
 		</q-table>
@@ -278,7 +279,7 @@ onMounted(() => {
 					return {
 						value: row.enrolments[inhabitant.id],
 						readOnly: inhabitant.username !== authStore.inhabitant?.username &&
-							(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode ),
+							(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode),
 					}
 				}
 			}
@@ -290,21 +291,21 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.q-table .q-icon {
+#mealPlanning .q-icon {
 	font-size: 30px;
 	@media (min-width: $breakpoint-sm-min) {
 		font-size: 40px;
 	}
 }
 
-.q-table th, .q-table td {
+#mealPlanning th, .q-table td {
 	padding: 4px 8px;
 	@media (max-width: $breakpoint-sm-min) {
 		padding: 4px 4px;
 	}
 }
 
-.q-table input[type="number"] {
+#mealPlanning input[type="number"] {
 	width: 2rem;
 }
 </style>

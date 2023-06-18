@@ -9,7 +9,7 @@
 				option-value="id"
 				option-label="name"
 				v-model="expense.category"
-				label="Categorie"
+				:label="$t('category')"
 			>
 				<template #option="scope">
 					<q-item v-bind="scope.itemProps">
@@ -32,13 +32,13 @@
 				option-value="id"
 				option-label="nickname"
 				v-model="expense.creditor_id"
-				label="Creditor"
+				:label="$t('creditor')"
 			/>
 
 			<q-input
 				outlined
 				v-model="expense.description"
-				label="Omschrijving"
+				:label="t('description')"
 			/>
 
 			<q-input
@@ -65,7 +65,7 @@
 				outlined
 				type="number"
 				v-model="expense.total_amount"
-				label="Totaalprijs"
+				:label="t('total_price')"
 				mask="#.##"
 			/>
 
@@ -92,7 +92,9 @@ import {useInhabitantsStore} from 'stores/inhabitants'
 import {useExpenseCategoriesStore} from 'stores/expenseCategories'
 import type {Expense} from 'src/models/Expense'
 import {useAuthStore} from 'stores/auth'
+import {useI18n} from 'vue-i18n'
 
+const {t} = useI18n()
 const expenseCategoriesStore = useExpenseCategoriesStore()
 const inhabitantsStore = useInhabitantsStore()
 const authStore = useAuthStore()

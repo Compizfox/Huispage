@@ -10,7 +10,7 @@
 				flat
 				rounded
 				icon="delete"
-				label="Delete"
+				:label="$t('delete')"
 				color="negative"
 				@click="onDelete"
 				v-close-popup
@@ -29,15 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, Ref} from 'vue';
-import {Expense} from 'src/models/Expense';
-import ExpenseForm from 'components/ExpenseForm.vue';
-import NestedCardDialog from 'components/NestedCardDialog.vue';
+import {onMounted, ref, Ref} from 'vue'
+import ExpenseForm from 'components/ExpenseForm.vue'
+import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
 import {useRoute} from 'vue-router'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useSettingsStore} from 'stores/settings'
 
+import type {Expense} from 'src/models/Expense'
+import {useI18n} from 'vue-i18n'
+
+const {t} = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
