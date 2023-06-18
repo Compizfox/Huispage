@@ -11,6 +11,10 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
 			{
+				path: '',
+				redirect: 'meal-planning',
+			},
+			{
 				path: 'meal-planning',
 				name: 'mealPlanning',
 				component: () => import('pages/MealPlanningPage.vue'),
