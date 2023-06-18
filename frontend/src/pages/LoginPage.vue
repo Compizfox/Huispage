@@ -13,7 +13,8 @@
 									<q-input
 										outlined
 										v-model="username"
-										type="username" label="Username">
+										type="text"
+										label="Username">
 										<template #prepend>
 											<q-icon name="person"/>
 										</template>
@@ -48,7 +49,7 @@
 
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
-import {useAuthStore} from 'stores/auth';
+import {useAuthStore} from 'stores/auth'
 import {useQuasar} from 'quasar'
 import {api} from 'boot/axios'
 

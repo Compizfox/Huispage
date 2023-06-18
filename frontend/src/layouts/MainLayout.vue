@@ -19,7 +19,7 @@
 
 				<q-space/>
 
-				<q-btn-dropdown stretch flat :label="authStore.username" icon="account_circle">
+				<q-btn-dropdown stretch flat :label="authStore.inhabitant?.nickname" icon="account_circle">
 					<q-list>
 						<q-item clickable @click="authStore.logout">
 							<q-item-section avatar>
@@ -46,7 +46,7 @@
 	</q-layout>
 </template>
 
-<style scoped>
+<style>
 .q-page-container {
 	margin-left: auto;
 	margin-right: auto;
