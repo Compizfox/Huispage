@@ -9,17 +9,30 @@
 					Huispage
 				</q-toolbar-title>
 
-				<q-tabs align="left" inline-label>
+				<q-tabs
+					inline-label
+					outside-arrows
+				>
 					<q-route-tab :to="{ name: 'mealPlanning' }" :label="$t('tabs.mealPlanning')" icon="restaurant"/>
 					<q-route-tab :to="{ name: 'expenses' }" :label="$t('tabs.expenses')" icon="receipt_long"/>
 					<q-route-tab :to="{ name: 'fridgeAccounting' }" :label="$t('tabs.fridgeAccounting')" icon="sports_bar"/>
 					<q-route-tab :to="{ name: 'stats' }" :label="$t('tabs.stats')" icon="insights"/>
-					<q-route-tab :to="{ name: 'settings' }" :label="$t('tabs.settings')" icon="settings"/>
+					<q-route-tab
+						:to="{ name: 'settings' }" :label="$t('tabs.settings')"
+						icon="settings"
+						v-if="authStore.inhabitant?.is_superuser"
+					/>
 				</q-tabs>
 
 				<q-space/>
 
-				<q-btn-dropdown stretch flat :label="authStore.inhabitant?.nickname" icon="account_circle">
+				<q-btn-dropdown
+					flat
+					:label="$q.screen.gt.sm ? authStore.inhabitant?.nickname: ''"
+					icon="account_circle"
+					dense
+					padding="none"
+				>
 					<q-list>
 						<q-item clickable @click="authStore.logout">
 							<q-item-section avatar>
@@ -63,3 +76,9 @@ import {useAuthStore} from 'stores/auth'
 
 const authStore = useAuthStore()
 </script>
+
+<style>
+.q-tabs {
+	max-width: 70%;
+}
+</style>
