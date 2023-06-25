@@ -2,7 +2,7 @@
 	<NestedCardDialog>
 		<template #title>
 			<q-icon name="restaurant"/>
-			{{ $t('meal') }} {{ mealModel.date }}
+			{{ t('meal') }} {{ mealModel.date }}
 		</template>
 
 		<q-form @submit="onSubmit()">
@@ -15,14 +15,14 @@
 					option-value="id"
 					option-label="nickname"
 					v-model="mealModel.cook"
-					:label="$t('cook')"
+					:label="t('cook')"
 					:disable="readOnly"
 				/>
 
 				<q-input
 					outlined
 					v-model="mealModel.description"
-					:label="$t('description')"
+					:label="t('description')"
 					:disable="readOnly"
 				/>
 
@@ -30,7 +30,7 @@
 					outlined
 					v-model="mealModel.ready_at"
 					type="time"
-					:hint="$t('ready_at')"
+					:hint="t('ready_at')"
 					step="60"
 					:disable="readOnly"
 				/>

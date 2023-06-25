@@ -13,12 +13,12 @@
 					inline-label
 					outside-arrows
 				>
-					<q-route-tab :to="{ name: 'mealPlanning' }" :label="$t('tabs.mealPlanning')" icon="restaurant"/>
-					<q-route-tab :to="{ name: 'expenses' }" :label="$t('tabs.expenses')" icon="receipt_long"/>
-					<q-route-tab :to="{ name: 'fridgeAccounting' }" :label="$t('tabs.fridgeAccounting')" icon="sports_bar"/>
-					<q-route-tab :to="{ name: 'stats' }" :label="$t('tabs.stats')" icon="insights"/>
+					<q-route-tab :to="{ name: 'mealPlanning' }" :label="t('tabs.mealPlanning')" icon="restaurant"/>
+					<q-route-tab :to="{ name: 'expenses' }" :label="t('tabs.expenses')" icon="receipt_long"/>
+					<q-route-tab :to="{ name: 'fridgeAccounting' }" :label="t('tabs.fridgeAccounting')" icon="sports_bar"/>
+					<q-route-tab :to="{ name: 'stats' }" :label="t('tabs.stats')" icon="insights"/>
 					<q-route-tab
-						:to="{ name: 'settings' }" :label="$t('tabs.settings')"
+						:to="{ name: 'settings' }" :label="t('tabs.settings')"
 						icon="settings"
 						v-if="authStore.inhabitant?.is_superuser"
 					/>
@@ -73,7 +73,9 @@
 
 <script setup lang="ts">
 import {useAuthStore} from 'stores/auth'
+import {useI18n} from 'vue-i18n'
 
+const {t} = useI18n()
 const authStore = useAuthStore()
 </script>
 

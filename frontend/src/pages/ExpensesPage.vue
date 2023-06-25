@@ -111,12 +111,12 @@
 					/>
 					<q-checkbox
 						v-model="settingsStore.showAllInhabitants"
-						:label="$t('show_all_inhabitants')"
+						:label="t('show_all_inhabitants')"
 					/>
 					<q-checkbox
 						v-if="authStore.inhabitant?.is_superuser"
 						v-model="settingsStore.adminMode"
-						:label="$t('admin_mode')"
+						:label="t('admin_mode')"
 					/>
 				</div>
 			</template>
@@ -124,7 +124,7 @@
 				<router-link
 					:to="{ name: 'createExpense' }"
 				>
-					<q-btn color="primary" :label="$t('new')"/>
+					<q-btn color="primary" :label="t('new')"/>
 				</router-link>
 			</template>
 		</q-table>

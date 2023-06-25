@@ -9,7 +9,7 @@
 				option-value="id"
 				option-label="name"
 				v-model="expense.category"
-				:label="$t('category')"
+				:label="t('category')"
 			>
 				<template #option="scope">
 					<q-item v-bind="scope.itemProps">
@@ -32,7 +32,7 @@
 				option-value="id"
 				option-label="nickname"
 				v-model="expense.creditor_id"
-				:label="$t('creditor')"
+				:label="t('creditor')"
 			/>
 
 			<q-input
@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, computed} from 'vue'
+import {computed} from 'vue'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useExpenseCategoriesStore} from 'stores/expenseCategories'
 import type {Expense} from 'src/models/Expense'

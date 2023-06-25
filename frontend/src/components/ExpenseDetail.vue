@@ -10,7 +10,7 @@
 				flat
 				rounded
 				icon="delete"
-				:label="$t('delete')"
+				:label="t('delete')"
 				color="negative"
 				@click="onDelete"
 				v-close-popup

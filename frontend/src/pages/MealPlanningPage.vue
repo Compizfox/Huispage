@@ -40,7 +40,7 @@
 						@click="onChangeCooking(props.row.date)"
 						:disabled="props.row.meal"
 					>
-						<q-tooltip>{{ $t('to_cook') }}</q-tooltip>
+						<q-tooltip>{{ t('to_cook') }}</q-tooltip>
 					</q-btn>
 				</q-td>
 			</template>
@@ -54,7 +54,7 @@
 						<q-icon
 							name="restaurant"
 						>
-							<q-tooltip>{{ props.col.label }} {{ $t('cooking') }}</q-tooltip>
+							<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
 						</q-icon>
 					</router-link>
 					<q-checkbox
@@ -100,7 +100,7 @@
 					flat
 					@click="today"
 				>
-					{{ $t('this_week') }}
+					{{ t('this_week') }}
 				</q-btn>
 
 				<q-btn
@@ -117,7 +117,7 @@
 				<q-checkbox
 					v-if="authStore.inhabitant?.is_superuser"
 					v-model="settingsStore.adminMode"
-					:label="$t('admin_mode')"
+					:label="t('admin_mode')"
 				/>
 			</template>
 		</q-table>
