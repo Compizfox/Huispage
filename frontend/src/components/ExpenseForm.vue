@@ -41,25 +41,7 @@
 				:label="t('description')"
 			/>
 
-			<q-input
-				outlined
-				v-model="expense.date"
-				mask="####-##-##"
-				fill-mask
-				hide-bottom-space
-			>
-				<template #append>
-					<q-icon name="event" class="cursor-pointer">
-						<q-popup-proxy ref="datepickerProxy">
-							<q-date
-								v-model="expense.date" minimal
-								@update:model-value="$refs.datepickerProxy.hide()"
-								today-btn
-							/>
-						</q-popup-proxy>
-					</q-icon>
-				</template>
-			</q-input>
+			<DateInput v-model="expense.date" :label="t('date')"/>
 
 			<q-input
 				outlined
@@ -93,6 +75,7 @@ import {useExpenseCategoriesStore} from 'stores/expenseCategories'
 import type {Expense} from 'src/models/Expense'
 import {useAuthStore} from 'stores/auth'
 import {useI18n} from 'vue-i18n'
+import DateInput from 'components/DateInput.vue'
 
 const {t} = useI18n()
 const expenseCategoriesStore = useExpenseCategoriesStore()
