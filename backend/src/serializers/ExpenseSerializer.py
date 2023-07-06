@@ -25,7 +25,6 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 	def update(self, instance: Expense, validated_data: dict) -> Expense:
 		# Handle updating for relation: create/update/delete debitors
-		print(validated_data)
 		for debitor_data in validated_data.pop('get_debitors'):
 			try:
 				if debitor_data['amount']:
