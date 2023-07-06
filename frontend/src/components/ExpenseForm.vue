@@ -49,6 +49,7 @@
 				v-model="expense.total_amount"
 				:label="t('total_price')"
 				mask="#.##"
+				prefix="€"
 			/>
 
 			<div class="row q-gutter-md">
