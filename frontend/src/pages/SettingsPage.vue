@@ -1,34 +1,31 @@
 <template>
 	<q-drawer
 		v-model="drawer"
-		show-if-above
-		:width="200"
-		:breakpoint="500"
 		bordered
 	>
 		<q-scroll-area class="fit">
-			<q-list>
-				<q-item clickable>
-					<q-item-section avatar>
-						<q-icon name="manage_accounts"/>
-					</q-item-section>
-					<q-item-section>
+			<q-tabs
+				vertical
+				inline-label
+			>
+				<q-route-tab :to="{ name: 'inhabitants' }" :label="t('inhabitants')" icon="manage_accounts"/>
+			</q-tabs>
 
-					</q-item-section>
-				</q-item>
-
-			</q-list>
 		</q-scroll-area>
 	</q-drawer>
-	<q-page padding>
-		<router-view />
-	</q-page>
+	<router-view/>
 </template>
 
 <script setup lang="ts">
+import {useI18n} from 'vue-i18n'
+import {ref} from 'vue'
+
+const {t} = useI18n()
+
+const drawer = ref(true)
 
 </script>
 
-<style scoped>
+<style>
 
 </style>

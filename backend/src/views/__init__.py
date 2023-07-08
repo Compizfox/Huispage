@@ -1,3 +1,4 @@
+from .InhabitantList import InhabitantList
 from .InhabitantViewSet import InhabitantViewSet
 from .ExpenseViewSet import ExpenseViewSet
 from .ExpenseCategoryViewSet import ExpenseCategoryViewSet

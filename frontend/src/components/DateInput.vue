@@ -5,7 +5,6 @@
 		@update:modelValue="value => $emit('update:modelValue', value)"
 		:label="label"
 		mask="####-##-##"
-		fill-mask
 		hide-bottom-space
 	>
 		<template #append>

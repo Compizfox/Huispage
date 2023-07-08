@@ -61,7 +61,19 @@ const routes: RouteRecordRaw[] = [
 					{
 						path: 'inhabitants',
 						name: 'inhabitants',
-						component: () => import('pages/settings/InhabitantsPage.vue')
+						component: () => import('pages/settings/InhabitantsPage.vue'),
+						children: [
+							{
+								path: 'create',
+								name: 'createInhabitant',
+								component: () => import('components/InhabitantCreate.vue')
+							},
+							{
+								path: ':id',
+								name: 'inhabitantDetail',
+								component: () => import('components/InhabitantDetail.vue')
+							},
+						]
 					}
 				]
 			},

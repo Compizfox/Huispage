@@ -1,6 +1,6 @@
 <template>
 	<q-dialog v-model="alert" @before-hide="close">
-		<q-card>
+		<q-card :style="'max-width: ' + width">
 			<q-card-section class="row items-center bg-primary text-white">
 				<div class="text-h6">
 					<slot name="title"></slot>
@@ -20,11 +20,11 @@ import {useRouter} from 'vue-router';
 const router = useRouter()
 const alert = ref(true)
 
+defineProps<{
+	width: string,
+}>()
+
 function close() {
 	router.back()
 }
 </script>
-
-<style scoped>
-
-</style>
