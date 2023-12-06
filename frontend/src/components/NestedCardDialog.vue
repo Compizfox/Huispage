@@ -27,4 +27,12 @@ defineProps<{
 function close() {
 	router.back()
 }
+
+function hide() {
+	alert.value = false;
+}
+
+defineExpose({
+	hide
+})
 </script>

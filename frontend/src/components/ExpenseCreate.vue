@@ -1,10 +1,10 @@
 <template>
-	<NestedCardDialog>
+	<NestedCardDialog ref="dialog">
 		<template #title>
 			<q-icon name="receipt_long"/>
 			{{t('new_expense')}}
 		</template>
-		<ExpenseForm v-model="expense" @onSubmit="onSubmit"/>
+		<ExpenseForm ref="form" v-model="expense" @onSubmit="onSubmit"/>
 		<q-card-actions align="right">
 			<q-btn
 				flat
@@ -13,15 +13,14 @@
 				label="OK"
 				color="primary"
 				@click="onSubmit"
-				v-close-popup
 			/>
 		</q-card-actions>
 	</NestedCardDialog>
 </template>
 
 <script setup lang="ts">
-import {ref, Ref} from 'vue'
-import {date} from 'quasar'
+import {computed, ref, Ref} from 'vue'
+import {date, useQuasar} from 'quasar'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
@@ -29,10 +28,13 @@ import {useInhabitantsStore} from 'stores/inhabitants'
 import {useI18n} from 'vue-i18n'
 
 import type {Expense} from 'src/models/Expense'
+import {useSettingsStore} from 'stores/settings'
 
 const {t} = useI18n()
+const $q = useQuasar()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
+const settingsStore = useSettingsStore();
 
 const url = 'expenses/'
 
@@ -46,25 +48,38 @@ const expense: Ref<Expense> = ref({
 	debitors: [],
 })
 
+const getInhabitants = computed(() =>
+	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
+)
+
 // Populate debitors field in expense object with inhabitants and default amounts of 0
 inhabitantsStore.fetch().then(() => {
-	expense.value.debitors = inhabitantsStore.getCurrentInhabitants.map((inhabitant) => {
+	expense.value.debitors = getInhabitants.value.map((inhabitant) => {
 		return {
 			inhabitant: inhabitant.id,
-			amount: 0,
+			amount: 1,
 		}
 	})
 })
 
-function onSubmit() {
+const form = ref()
+const dialog = ref()
+
+async function onSubmit() {
+	const valid = await form.value.validate()
+	if (!valid) return
+
 	authStore.request({
 		url: url,
 		method: 'post',
 		data: expense.value,
+	}).catch(e => {
+		$q.notify({
+			type: 'negative',
+			message: e.message,
+		})
 	})
+
+	dialog.value.hide()
 }
 </script>
-
-<style scoped>
-
-</style>

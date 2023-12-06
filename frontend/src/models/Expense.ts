@@ -5,7 +5,7 @@ export interface Expense {
 	created_at: string,
 	description: string,
 	category: number | null,
-	total_amount: number | null,
+	total_amount: number,
 	unit_price: number | null,
 	debitors: Array<{
 		inhabitant: number,

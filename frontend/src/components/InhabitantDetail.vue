@@ -1,10 +1,10 @@
 <template>
-	<NestedCardDialog width="1000px">
+	<NestedCardDialog ref="dialog" width="1000px">
 		<template #title>
 			<q-icon name="person"/>
 			{{ t('new_inhabitant') }}
 		</template>
-		<InhabitantForm v-model="inhabitant" @onSubmit="onSubmit"/>
+		<InhabitantForm ref="inhabitant_form" v-model="inhabitant" @onSubmit="onSubmit"/>
 		<q-card-actions align="right">
 			<q-btn
 				flat
@@ -22,7 +22,6 @@
 				label="OK"
 				@click="onSubmit"
 				color="primary"
-				v-close-popup
 			/>
 		</q-card-actions>
 	</NestedCardDialog>
@@ -72,6 +71,9 @@ const inhabitant: Ref<Inhabitant> = ref({
 	start_balance: 0,
 })
 
+const inhabitant_form = ref()
+const dialog = ref()
+
 function fetch() {
 	authStore.request({
 		url: url,
@@ -81,8 +83,11 @@ function fetch() {
 	})
 }
 
-function onSubmit() {
-	authStore.request({
+async function onSubmit() {
+	const valid = await inhabitant_form.value.validate()
+	if (!valid) return
+
+	await authStore.request({
 		url: url,
 		method: 'put',
 		data: inhabitant.value,
@@ -92,6 +97,8 @@ function onSubmit() {
 			message: e.message,
 		})
 	})
+
+	dialog.value.hide()
 }
 
 function onDelete() {
@@ -99,6 +106,8 @@ function onDelete() {
 		url: url,
 		method: 'delete',
 	})
+
+	dialog.value.hide()
 }
 
 onMounted(() => {
