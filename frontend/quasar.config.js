@@ -35,6 +35,7 @@ module.exports = configure(function (ctx) {
 		boot: [
 			'i18n',
 			'axios',
+			'apexcharts',
 		],
 
 		// https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -84,7 +85,7 @@ module.exports = configure(function (ctx) {
 			env: {
 				API_ENDPOINT: ctx.dev
 					? 'http://localhost:8080'
-					: ''
+					: 'https://club101.nl/backend'
 			},
 		},
 
@@ -94,7 +95,7 @@ module.exports = configure(function (ctx) {
 				type: 'http'
 			},
 			port: 8080,
-			open: true, // opens browser window automatically
+			open: false, // opens browser window automatically
 			proxy: {
 				'/api': {
 					target: 'http://127.0.0.1:8000',

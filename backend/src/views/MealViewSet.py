@@ -23,7 +23,6 @@ class MealViewSet(viewsets.ModelViewSet):
 
 	def update(self, request: Request, *args, **kwargs) -> Response:
 		# Deny updating Meal for others for non-admin users
-
 		if request.data['cook'] != request.user.inhabitant.pk and not request.user.is_superuser:
 			raise PermissionDenied
 
