@@ -6,5 +6,5 @@ from ..serializers import InhabitantSerializer
 
 
 class InhabitantList(generics.ListAPIView):
-	queryset = Inhabitant.objects.all().order_by(F('date_leave').desc(nulls_first=True))
+	queryset = Inhabitant.objects.all().order_by(F('date_leave').desc(nulls_first=True), '-date_entrance')
 	serializer_class = InhabitantSerializer
