@@ -16,7 +16,7 @@
 					option-label="nickname"
 					v-model="mealModel.cook"
 					:label="t('cook')"
-					:disable="readOnly"
+					:disable="! (authStore.inhabitant?.is_superuser && settingsStore.adminMode)"
 				/>
 
 				<q-input
