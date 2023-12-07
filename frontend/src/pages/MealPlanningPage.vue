@@ -47,16 +47,17 @@
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
-					<router-link
+					<q-btn
 						:to="{ name: 'mealDetail', params: { id: props.row.meal.id }}"
+						icon="restaurant"
+						flat
+						no-caps
+						padding="xs"
 						v-if="props.row.meal?.cook === props.col.name"
 					>
-						<q-icon
-							name="restaurant"
-						>
-							<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
-						</q-icon>
-					</router-link>
+						<q-badge color="red" floating>{{ Object.values(props.row.enrolments).reduce((a, b) => a + b, 0) }}</q-badge>
+						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
+					</q-btn>
 					<q-checkbox
 						:model-value="isEnrolled(props.row.enrolments[props.col.name])"
 						:disable="props.value.readOnly"
