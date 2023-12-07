@@ -13,7 +13,21 @@ from ..serializers import ExpenseSerializer
 class Pagination(PageNumberPagination):
 	page_size = 25
 	page_size_query_param = 'page_size'
-	max_page_size = 10000
+
+	# Interpret sentinel value of page_size=0 as all
+	def paginate_queryset(self, queryset, request, view=None):
+		self.max_page_size = queryset.count()
+		return super().paginate_queryset(queryset, request, view=None)
+
+	def get_page_size(self, request):
+		if self.page_size_query_param:
+			ret = int(request.query_params[self.page_size_query_param])
+			if ret < 0:
+				return self.page_size
+			elif ret == 0:
+				return self.max_page_size
+			else:
+				return ret
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
