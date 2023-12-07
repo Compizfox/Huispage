@@ -35,6 +35,7 @@
 			:filter="filter"
 			row-key="id"
 			v-model:pagination="pagination"
+			:rows-per-page-options="[25, 50, 100, 0]"
 			@request="onRequest"
 		>
 			<template #body-cell-category="props">
