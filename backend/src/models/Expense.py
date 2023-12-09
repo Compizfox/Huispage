@@ -38,9 +38,9 @@ class Expense(models.Model):
 		Debitor = apps.get_model('src', 'Debitor')
 
 		debitors = []
-		for inhabitant in Inhabitant.objects.prefetch_related('debitor_set').all():
+		for inhabitant in Inhabitant.objects.all():
 			try:
-				debitors.append(inhabitant.debitor_set.get(expense=self))
+				debitors.append(self.debitor_set.get(inhabitant=inhabitant))
 			except Debitor.DoesNotExist:
 				debitors.append(Debitor(inhabitant=inhabitant, amount=None))
 
