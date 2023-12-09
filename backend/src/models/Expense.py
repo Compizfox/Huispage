@@ -2,6 +2,7 @@ from django.db import models
 from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db.models import OuterRef, Subquery
 
 from .Inhabitant import Inhabitant
 from .ExpenseCategory import ExpenseCategory
@@ -37,14 +38,14 @@ class Expense(models.Model):
 		"""
 		Debitor = apps.get_model('src', 'Debitor')
 
-		debitors = []
-		for inhabitant in Inhabitant.objects.all():
-			try:
-				debitors.append(self.debitor_set.get(inhabitant=inhabitant))
-			except Debitor.DoesNotExist:
-				debitors.append(Debitor(inhabitant=inhabitant, amount=None))
+		inhabitants = Inhabitant.objects.annotate(
+			amount=Subquery(Debitor.objects.filter(inhabitant_id=OuterRef('pk'), expense=self).values('amount')[:1])
+		)
 
-		return debitors
+		return [{
+			'id': x.pk,
+			'amount': x.amount,
+		} for x in inhabitants.all()]
 
 	def clean(self):
 		if self.debitor_set.aggregate(models.Sum('amount'))['amount__sum'] < 0:

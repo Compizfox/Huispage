@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
-from ..models import Debitor
+from ..models import Inhabitant
 
 
 class DebitorSerializer(serializers.ModelSerializer):
+	inhabitant = serializers.IntegerField(source='id')
+	amount = serializers.IntegerField()
+
 	class Meta:
-		model = Debitor
+		model = Inhabitant
 		fields = ('inhabitant', 'amount')
 
 	def to_representation(self, instance):

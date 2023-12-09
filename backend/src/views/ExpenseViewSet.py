@@ -31,7 +31,7 @@ class Pagination(PageNumberPagination):
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
-	queryset = Expense.objects.prefetch_related('debitor_set')
+	queryset = Expense.objects
 	serializer_class = ExpenseSerializer
 	filter_backends = [DjangoFilterBackend, OrderingFilter]
 	filterset_fields = ['category', 'creditor', 'debitors']
@@ -40,7 +40,6 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
 	def update(self, request: Request, *args, **kwargs) -> Response:
 		# Deny updating others' expenses for non-admin users
-
 		if request.data['creditor_id'] != request.user.inhabitant.pk and not request.user.is_superuser:
 			raise PermissionDenied
 
