@@ -9,7 +9,10 @@
 								<h2 class="text-white q-my-md">Huispage</h2>
 							</q-card-section>
 							<q-card-section>
-								<q-form class="q-px-sm q-py-md q-gutter-md">
+								<q-form
+									class="q-px-sm q-py-md q-gutter-md"
+									@submit.prevent="onSubmit"
+								>
 									<q-input
 										outlined
 										v-model="username"
@@ -34,7 +37,6 @@
 										unelevated
 										size="lg"
 										color="primary"
-										@click="onSubmit"
 										label="Login"
 									/>
 								</q-form>
