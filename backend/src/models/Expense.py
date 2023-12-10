@@ -1,8 +1,6 @@
 from django.db import models
-from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from django.db.models import OuterRef, Subquery
 
 from .Inhabitant import Inhabitant
 from .ExpenseCategory import ExpenseCategory
@@ -36,16 +34,22 @@ class Expense(models.Model):
 		Get a list of Debitors for each Inhabitant, including those for which a Debitor entry does not exist (i.e.
 		outer join)
 		"""
-		Debitor = apps.get_model('src', 'Debitor')
-
-		inhabitants = Inhabitant.objects.annotate(
-			amount=Subquery(Debitor.objects.filter(inhabitant_id=OuterRef('pk'), expense=self).values('amount')[:1])
+		query = (
+			'SELECT i.id, amount '
+			'FROM src_inhabitant as i '
+			'LEFT JOIN ( '
+			'   SELECT src_debitor.inhabitant_id, src_debitor.amount as amount '
+			'   FROM src_debitor '
+			'   JOIN src_expense ON src_debitor.expense_id = src_expense.id and src_expense.id = %s) as sol '
+			'   ON i.id = sol.inhabitant_id'
 		)
+
+		inhabitants = Inhabitant.objects.raw(query, (self.pk,))
 
 		return [{
 			'id': x.pk,
 			'amount': x.amount,
-		} for x in inhabitants.all()]
+		} for x in inhabitants]
 
 	def clean(self):
 		if self.debitor_set.aggregate(models.Sum('amount'))['amount__sum'] < 0:
