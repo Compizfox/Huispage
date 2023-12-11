@@ -47,7 +47,7 @@ class Expense(models.Model):
 		inhabitants = Inhabitant.objects.raw(query, (self.pk,))
 
 		return [{
-			'id': x.pk,
+			'inhabitant': x,
 			'amount': x.amount,
 		} for x in inhabitants]
 
