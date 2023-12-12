@@ -11,26 +11,18 @@
 			:rows-per-page-options="[]"
 			separator="cell"
 			id="mealPlanning"
+			wrap-cells
 		>
 			<template
 				v-for="inhabitantSlot in inhabitantHeaderCellSlots" #[inhabitantSlot]="props"
 				:key="inhabitantSlot"
 			>
 				<q-th :props="props">
-					<q-chip :dense="$q.screen.lt.sm">
-						<q-avatar>
-							<img src="https://cdn.quasar.dev/img/boy-avatar.png">
-						</q-avatar>
-						{{ props.col.label }}
-					</q-chip>
+					{{ props.col.label }}
 				</q-th>
 			</template>
 			<template #body-cell-date="props">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
-					<q-icon
-						name="today"
-						v-if="isToday(props.row.date)"
-					/>
 					<q-btn
 						flat
 						no-caps
@@ -39,6 +31,7 @@
 						'dd')"
 						@click="onChangeCooking(props.row.date)"
 						:disabled="props.row.meal"
+						style="white-space: nowrap;"
 					>
 						<q-tooltip>{{ t('to_cook') }}</q-tooltip>
 					</q-btn>
@@ -47,17 +40,6 @@
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
-					<q-btn
-						:to="{ name: 'mealDetail', params: { id: props.row.meal.id }}"
-						icon="restaurant"
-						flat
-						no-caps
-						padding="xs"
-						v-if="props.row.meal?.cook === props.col.name"
-					>
-						<q-badge color="red" floating>{{ Object.values(props.row.enrolments).reduce((a, b) => a + b, 0) }}</q-badge>
-						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
-					</q-btn>
 					<q-checkbox
 						:model-value="isEnrolled(props.row.enrolments[props.col.name])"
 						:disable="props.value.readOnly"
@@ -77,12 +59,25 @@
 							min="0"
 							max="99"
 							dense
+							prefix="+"
 						/>
 						<q-tooltip>
 							Guests
 						</q-tooltip>
 					</div>
-
+					<q-btn
+						:to="{ name: 'mealDetail', params: { id: props.row.meal.id }}"
+						icon="restaurant"
+						no-caps
+						padding="xs"
+						flat
+						v-if="props.row.meal?.cook === props.col.name"
+					>
+						<q-badge color="accent" floating>
+							{{ Object.values(props.row.enrolments).reduce((a, b) => a + b, 0) }}
+						</q-badge>
+						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
+					</q-btn>
 				</q-td>
 			</template>
 
@@ -275,7 +270,7 @@ onMounted(() => {
 			return {
 				name: inhabitant.id,
 				label: inhabitant.nickname,
-				align: 'right',
+				align: 'left',
 				field: (row: any) => {
 					return {
 						value: row.enrolments[inhabitant.id],
@@ -300,10 +295,11 @@ onMounted(() => {
 }
 
 #mealPlanning th, .q-table td {
-	padding: 4px 8px;
-	@media (max-width: $breakpoint-sm-min) {
-		padding: 4px 4px;
-	}
+	padding: 4px;
+}
+
+#mealPlanning td {
+	vertical-align: top;
 }
 
 #mealPlanning input[type="number"] {
