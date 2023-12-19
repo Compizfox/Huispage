@@ -164,15 +164,17 @@ const pagination = {
 	rowsPerPage: 7
 }
 
-function fetch() {
-	authStore.request({
+async function fetch() {
+	loading.value = true
+
+	const response = await authStore.request({
 		url: 'dailies/' + date.formatDate(currentDate, 'YYYY') + '/' + date.getWeekOfYear(currentDate) + '/',
 		method: 'get',
-	}).then(response => {
-		rows.value = response?.data
-	}).finally(() => {
-		loading.value = false
 	})
+
+	rows.value = response?.data
+
+	loading.value = false
 }
 
 function onChangeEnrolmentCheckbox(row_id: number, inhabitant_id: number, date: string, value: boolean) {
@@ -189,8 +191,8 @@ function onChangeNumGuests(row_id: number, inhabitant_id: number, date: string, 
 	postEnrolments(inhabitant_id, date, n)
 }
 
-function postEnrolments(inhabitant_id: number, date: string, value: number) {
-	authStore.request({
+async function postEnrolments(inhabitant_id: number, date: string, value: number) {
+	await authStore.request({
 		url: 'enrolments/',
 		method: 'post',
 		data: {
@@ -198,18 +200,18 @@ function postEnrolments(inhabitant_id: number, date: string, value: number) {
 			date: date,
 			n: value
 		}
-	}).then(() => {
-		$q.notify({
-			type: 'positive',
-			message: 'Saved.'
-		})
-		loading.value = true
-		fetch()
 	})
+
+	$q.notify({
+		type: 'positive',
+		message: 'Saved.'
+	})
+
+	await fetch()
 }
 
-function onChangeCooking(date: string) {
-	authStore.request({
+async function onChangeCooking(date: string) {
+	await authStore.request({
 		url: 'meals/',
 		method: 'post',
 		data: {
@@ -217,19 +219,14 @@ function onChangeCooking(date: string) {
 			date: date,
 			ready_at: '18:00'
 		}
-	}).then(() => {
-		$q.notify({
-			type: 'positive',
-			message: 'Saved.'
-		})
-		loading.value = true
-		fetch()
-	}).catch(e => {
-		$q.notify({
-			type: 'negative',
-			message: e.message,
-		})
 	})
+
+	$q.notify({
+		type: 'positive',
+		message: 'Saved.'
+	})
+
+	await fetch()
 }
 
 function today() {
@@ -239,7 +236,7 @@ function today() {
 
 function changeWeek(amount: number) {
 	currentDate = date.addToDate(currentDate, {days: 7*amount})
-	loading.value = true
+
 	fetch()
 }
 
@@ -251,7 +248,7 @@ function getNumGuests(n: number) {
 	return n - 1
 }
 
-onBeforeRouteUpdate(async (to, from) => {
+onBeforeRouteUpdate(() => {
 	fetch()
 })
 

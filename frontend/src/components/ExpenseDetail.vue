@@ -38,10 +38,8 @@ import {useSettingsStore} from 'stores/settings'
 
 import type {Expense} from 'src/models/Expense'
 import {useI18n} from 'vue-i18n'
-import {useQuasar} from 'quasar'
 
 const {t} = useI18n()
-const $q = useQuasar()
 const route = useRoute()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
@@ -58,20 +56,20 @@ const expense: Ref<Expense> = ref({
 
 const url = 'expenses/' + route.params.id + '/'
 
-function fetch() {
-	authStore.request({
+async function fetch() {
+	const response = await authStore.request({
 		url: url,
 		method: 'get',
-	}).then(response => {
-		expense.value = response?.data
-
-		if(!settingsStore.showAllInhabitants) {
-			// Filter out non-current inhabitants that are not debitors
-			expense.value.debitors = expense.value.debitors.filter(debitor =>
-				inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === debitor.inhabitant) ||
-				debitor.amount !== 0)
-		}
 	})
+
+	expense.value = response?.data
+
+	if (!settingsStore.showAllInhabitants) {
+		// Filter out non-current inhabitants that are not debitors
+		expense.value.debitors = expense.value.debitors.filter(debitor =>
+			inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === debitor.inhabitant) ||
+			debitor.amount !== 0)
+	}
 }
 
 const form = ref()
@@ -81,22 +79,17 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	authStore.request({
+	await authStore.request({
 		url: url,
 		method: 'put',
 		data: expense.value,
-	}).catch(e => {
-		$q.notify({
-			type: 'negative',
-			message: e.message,
-		})
 	})
 
 	dialog.value.hide()
 }
 
-function onDelete() {
-	authStore.request({
+async function onDelete() {
+	await authStore.request({
 		url: url,
 		method: 'delete',
 	})

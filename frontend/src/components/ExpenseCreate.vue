@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import {date} from 'quasar'
 import {computed, ref, Ref} from 'vue'
-import {date, useQuasar} from 'quasar'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
@@ -69,15 +69,10 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	authStore.request({
+	await authStore.request({
 		url: url,
 		method: 'post',
 		data: expense.value,
-	}).catch(e => {
-		$q.notify({
-			type: 'negative',
-			message: e.message,
-		})
 	})
 
 	dialog.value.hide()

@@ -94,13 +94,13 @@ const url = 'meals/' + route.params.id + '/'
 const readOnly = computed(() => mealModel.value.cook !== authStore.inhabitant?.id &&
 	(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode))
 
-function fetch() {
-	authStore.request({
+async function fetch() {
+	const response = await authStore.request({
 		url: url,
 		method: 'get',
-	}).then(response => {
-		mealModel.value = response?.data
 	})
+
+	mealModel.value = response?.data
 }
 
 function onSubmit() {

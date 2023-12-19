@@ -36,10 +36,8 @@ import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 
 import type {Inhabitant} from 'src/models/admin/Inhabitant'
-import {useQuasar} from 'quasar'
 
 const {t} = useI18n()
-const $q = useQuasar()
 const route = useRoute()
 const authStore = useAuthStore()
 
@@ -74,13 +72,13 @@ const inhabitant: Ref<Inhabitant> = ref({
 const inhabitant_form = ref()
 const dialog = ref()
 
-function fetch() {
-	authStore.request({
+async function fetch() {
+	const response = await authStore.request({
 		url: url,
 		method: 'get',
-	}).then(response => {
-		inhabitant.value = response?.data
 	})
+
+	inhabitant.value = response?.data
 }
 
 async function onSubmit() {
@@ -91,18 +89,13 @@ async function onSubmit() {
 		url: url,
 		method: 'put',
 		data: inhabitant.value,
-	}).catch(e => {
-		$q.notify({
-			type: 'negative',
-			message: e.message,
-		})
 	})
 
 	dialog.value.hide()
 }
 
-function onDelete() {
-	authStore.request({
+async function onDelete() {
+	await authStore.request({
 		url: url,
 		method: 'delete',
 	})

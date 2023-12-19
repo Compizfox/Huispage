@@ -1,8 +1,11 @@
 import {defineStore} from 'pinia'
 import {api} from 'boot/axios'
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
+import {useQuasar} from 'quasar'
 
 import type {Inhabitant} from 'src/models/Inhabitant'
+
+const $q = useQuasar()
 
 export const useAuthStore = defineStore('auth', {
 	state: () => ({
@@ -38,8 +41,15 @@ export const useAuthStore = defineStore('auth', {
 			try {
 				return await api.request(config)
 			} catch (e) {
-				if (axios.isAxiosError(e) && e.response?.status === 403) {
-					await this.logout()
+				if (axios.isAxiosError(e)) {
+					if (e.response?.status === 403) {
+						await this.logout()
+					} else {
+						$q.notify({
+							type: 'negative',
+							message: e.message,
+						})
+					}
 				} else {
 					throw e
 				}
@@ -47,3 +57,4 @@ export const useAuthStore = defineStore('auth', {
 		}
 	}
 });
+

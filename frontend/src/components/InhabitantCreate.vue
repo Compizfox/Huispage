@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import {ref, Ref} from 'vue'
-import {date, useQuasar} from 'quasar'
+import {date} from 'quasar'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import InhabitantForm from 'components/InhabitantForm.vue'
 import {useAuthStore} from 'stores/auth';
@@ -29,7 +29,6 @@ import {useI18n} from 'vue-i18n'
 import type {Inhabitant} from 'src/models/admin/Inhabitant'
 
 const {t} = useI18n()
-const $q = useQuasar()
 const authStore = useAuthStore()
 
 const url = 'admin/inhabitants/'
@@ -67,15 +66,10 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	authStore.request({
+	await authStore.request({
 		url: url,
 		method: 'post',
 		data: inhabitant.value,
-	}).catch(e => {
-		$q.notify({
-			type: 'negative',
-			message: e.message,
-		})
 	})
 
 	dialog.value.hide()

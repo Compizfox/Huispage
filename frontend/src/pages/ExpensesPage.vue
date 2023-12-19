@@ -242,7 +242,6 @@ const getInhabitants = computed(() =>
 const balance = ref({})
 
 const onRequest: QTableProps['onRequest'] = (requestProp) => {
-	loading.value = true
 	pagination.value = Object.assign(pagination.value, requestProp.pagination);
 	fetch()
 }
@@ -252,8 +251,10 @@ const inhabitantSlots = computed(() =>
 	getInhabitants.value.map(inhabitant => 'body-cell-' + inhabitant.username)
 )
 
-function fetch() {
-	authStore.request({
+async function fetch() {
+	loading.value = true
+
+	let response = await authStore.request({
 		url: 'expenses/',
 		method: 'get',
 		params: {
@@ -263,12 +264,12 @@ function fetch() {
 			page: pagination.value.page,
 			page_size: pagination.value.rowsPerPage,
 		}
-	}).then(response => {
-		pagination.value.rowsNumber = response?.data.count
-		rows.value = response?.data.results
-	}).finally(() => {
-		loading.value = false
 	})
+
+	pagination.value.rowsNumber = response?.data.count
+	rows.value = response?.data.results
+
+	loading.value = false
 }
 
 onMounted(() => {
@@ -285,7 +286,7 @@ onMounted(() => {
 	fetch()
 })
 
-onBeforeRouteUpdate(async (to, from) => {
+onBeforeRouteUpdate(() => {
 	fetch()
 })
 </script>

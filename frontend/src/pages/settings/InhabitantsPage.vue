@@ -100,22 +100,18 @@ const columns = [
 	},
 ]
 
-function fetch() {
+async function fetch() {
 	loading.value = true
-	useAuthStore().request({url: 'admin/inhabitants/', method: 'get'})
-		.then(response => {
-			rows.value = response?.data
-		})
-		.finally(() => {
-			loading.value = false
-		})
+	const response = await useAuthStore().request({url: 'admin/inhabitants/', method: 'get'})
+	rows.value = response?.data
+	loading.value = false
 }
 
 onMounted(() => {
 	fetch()
 })
 
-onBeforeRouteUpdate(async (to, from) => {
+onBeforeRouteUpdate( () => {
 	fetch()
 })
 </script>
