@@ -217,7 +217,7 @@ const columns = computed(() => [
 		name: inhabitant.username,
 		required: true,
 		label: inhabitant.nickname,
-		align: 'right',
+		align: 'center',
 		field: row => row.debitors.find(x => x.inhabitant === inhabitant.id)?.amount,
 		format: val => (val ?? 0)
 	}
