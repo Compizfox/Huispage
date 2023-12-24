@@ -15,9 +15,10 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import {useRouter} from 'vue-router';
+import {useRouter, useRoute} from 'vue-router';
 
 const router = useRouter()
+const route = useRoute()
 const alert = ref(true)
 
 defineProps<{
@@ -25,7 +26,7 @@ defineProps<{
 }>()
 
 function close() {
-	router.back()
+	router.push(route.matched[route.matched.length - 2])
 }
 
 function hide() {
