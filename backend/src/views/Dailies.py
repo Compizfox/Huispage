@@ -21,7 +21,7 @@ class DailiesView(APIView):
 		"""
 		meal = Meal.objects.filter(date=date).first()
 
-		inhabitants = Inhabitant.objects.filter(date_leave__isnull=True).select_related('user').prefetch_related('enrolments')
+		inhabitants = Inhabitant.objects.filter(date_leave__isnull=True).prefetch_related('enrolments')
 
 		return {
 			'date': date,
