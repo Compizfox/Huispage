@@ -39,7 +39,10 @@ export default {
 		'language': 'Language',
 		'email_address': 'Email address',
 		'password': 'Password',
-		'inhabitant_occupancy': 'Inhabitant occupancy'
+		'inhabitant_occupancy': 'Inhabitant occupancy',
+		'save_and_create_expense': 'Save and create expense',
+		'save_and_edit_expense': 'Save and edit expense',
+		'save': 'Save',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -67,5 +70,8 @@ export default {
 		'cook': 'Kok',
 		'ready_at': 'Klaar om',
 		'inhabitants': 'Bewoners',
+		'save_and_create_expense': 'Oplaan en uitgave aanmaken',
+		'save_and_edit_expense': 'Oplaan en uitgave bewerken',
+		'save': 'Opslaan',
 	},
 }

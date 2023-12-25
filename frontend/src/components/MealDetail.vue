@@ -2,7 +2,7 @@
 	<NestedCardDialog>
 		<template #title>
 			<q-icon name="restaurant"/>
-			{{ t('meal') }} {{ mealModel.date }}
+			{{ t('meal') }} {{ meal.date }}
 		</template>
 
 		<q-form @submit="onSubmit()">
@@ -14,21 +14,21 @@
 					:options="inhabitantsStore.getCurrentInhabitants"
 					option-value="id"
 					option-label="nickname"
-					v-model="mealModel.cook"
+					v-model="meal.cook"
 					:label="t('cook')"
 					:disable="! (authStore.inhabitant?.is_superuser && settingsStore.adminMode)"
 				/>
 
 				<q-input
 					outlined
-					v-model="mealModel.description"
+					v-model="meal.description"
 					:label="t('description')"
 					:disable="readOnly"
 				/>
 
 				<q-input
 					outlined
-					v-model="mealModel.ready_at"
+					v-model="meal.ready_at"
 					type="time"
 					:hint="t('ready_at')"
 					step="60"
@@ -40,6 +40,7 @@
 				<q-btn
 					flat
 					rounded
+					no-caps
 					icon="delete"
 					label="Delete"
 					color="negative"
@@ -50,8 +51,27 @@
 				<q-btn
 					flat
 					rounded
+					no-caps
+					icon="receipt"
+					:label="t('save_and_create_expense')"
+					@click="onSaveAndCreateExpense"
+					v-if="meal.expense == null"
+				/>
+				<q-btn
+					flat
+					rounded
+					no-caps
+					icon="receipt"
+					:label="t('save_and_edit_expense')"
+					@click="onSaveAndEditExpense"
+					v-else
+				/>
+				<q-btn
+					flat
+					rounded
+					no-caps
 					icon="save"
-					label="OK"
+					:label="t('save')"
 					type="submit"
 					color="primary"
 					v-close-popup
@@ -63,8 +83,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, Ref, ref} from 'vue'
-import {useRoute} from 'vue-router'
+import {computed, Ref, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useAuthStore} from 'stores/auth'
 
@@ -74,25 +94,19 @@ import {useSettingsStore} from 'stores/settings'
 import {useI18n} from 'vue-i18n'
 
 const route = useRoute()
+const router = useRouter()
 
 const {t} = useI18n()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore()
 const settingsStore = useSettingsStore()
 
-
-const mealModel: Ref<Meal> = ref({
-	cook: null,
-	participants: [],
-	description: '',
-	created_at: '',
-	updated_at: '',
-	date: '',
-	ready_at: '',
-})
+const meal: Ref<Meal> = ref({} as Meal)
 const url = 'meals/' + route.params.id + '/'
-const readOnly = computed(() => mealModel.value.cook !== authStore.inhabitant?.id &&
+const readOnly = computed(() => meal.value?.cook !== authStore.inhabitant?.id &&
 	(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode))
+
+fetch()
 
 async function fetch() {
 	const response = await authStore.request({
@@ -100,14 +114,14 @@ async function fetch() {
 		method: 'get',
 	})
 
-	mealModel.value = response?.data
+	meal.value = response?.data
 }
 
-function onSubmit() {
-	authStore.request({
+async function onSubmit() {
+	await authStore.request({
 		url: url,
 		method: 'put',
-		data: mealModel.value,
+		data: meal.value,
 	})
 }
 
@@ -118,7 +132,13 @@ function onDelete() {
 	})
 }
 
-onMounted(() => {
-	fetch()
-})
+async function onSaveAndCreateExpense() {
+	await onSubmit()
+	await router.push({name: 'createExpense', query: {meal_id: route.params.id}})
+}
+
+async function onSaveAndEditExpense() {
+	await onSubmit()
+	await router.push({name: 'expenseDetail', params: {id: meal.value.expense}})
+}
 </script>
