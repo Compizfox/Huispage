@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db import models
 
 from .Expense import Expense
@@ -19,9 +21,13 @@ class Meal(models.Model):
 	date = models.DateField(unique=True)
 	ready_at = models.TimeField()
 
-	@property
-	def enrolments(self):
-		return Enrolment.objects.filter(date=self.date)
+	def get_expense(self) -> Optional[Expense]:
+		try:
+			expense = Expense.objects.get(date=self.date, category=1).pk
+		except Expense.DoesNotExist:
+			expense = None
+
+		return expense
 
 	def save(self, *args, **kwargs):
 		super().save(*args, **kwargs)
