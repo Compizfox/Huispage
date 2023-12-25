@@ -31,6 +31,7 @@ class ExpenseImportSerializer(serializers.Serializer):
 				(expense, created) = Expense.objects.update_or_create(
 					creditor=creditor,
 					description=row['Omschrijving'],
+					date=row['Datum'],
 					defaults={
 						'creditor'    : creditor,
 						'category'    : ExpenseCategory.objects.get(name=expense_category_map[row['Soort']]),
@@ -50,7 +51,8 @@ class ExpenseImportSerializer(serializers.Serializer):
 							expense=expense,
 							amount=v
 						)
-			except:
+			except Exception as e:
+				print(e)
 				if created:
 					expense.delete()
 
