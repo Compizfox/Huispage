@@ -19,19 +19,19 @@
 </template>
 
 <script setup lang="ts">
-import {date} from 'quasar'
 import {computed, ref, Ref} from 'vue'
-import ExpenseForm from 'components/ExpenseForm.vue'
-import NestedCardDialog from 'components/NestedCardDialog.vue'
+import {date} from 'quasar'
 import {useAuthStore} from 'stores/auth';
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useI18n} from 'vue-i18n'
-
+import {useRoute} from 'vue-router'
+import ExpenseForm from 'components/ExpenseForm.vue'
+import NestedCardDialog from 'components/NestedCardDialog.vue'
 import type {Expense} from 'src/models/Expense'
 import {useSettingsStore} from 'stores/settings'
 
 const {t} = useI18n()
-const $q = useQuasar()
+const route = useRoute()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
 const settingsStore = useSettingsStore();
@@ -43,14 +43,17 @@ const expense: Ref<Expense> = ref({
 	creditor_id: authStore.inhabitant!.id,
 	date: date.formatDate(Date.now(), 'YYYY-MM-DD'),
 	description: '',
-	category: null,
-	total_amount: null,
+	category: 0,
+	total_amount: 0,
 	debitors: [],
 })
 
 const getInhabitants = computed(() =>
 	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
 )
+
+const form = ref()
+const dialog = ref()
 
 // Populate debitors field in expense object with inhabitants and default amounts of 0
 inhabitantsStore.fetch().then(() => {
@@ -60,10 +63,9 @@ inhabitantsStore.fetch().then(() => {
 			amount: 1,
 		}
 	})
-})
 
-const form = ref()
-const dialog = ref()
+	if (route.query.meal_id) fetch()
+})
 
 async function onSubmit() {
 	const valid = await form.value.validate()
@@ -76,5 +78,35 @@ async function onSubmit() {
 	})
 
 	dialog.value.hide()
+}
+
+async function fetch() {
+	// Assign meal data to expense
+	{
+		const response = await authStore.request({
+			url: 'meals/' + route.query.meal_id + '/',
+			method: 'get',
+		})
+
+		expense.value.category = 1
+		expense.value.creditor_id = response?.data.cook
+		expense.value.date = response?.data.date
+		expense.value.description = response?.data.description
+	}
+
+	// Assign the meal enrolments to expense debitors
+	{
+		const response = await authStore.request({
+			url: 'meals/' + route.query.meal_id + '/enrolments/',
+			method: 'get',
+		})
+
+		expense.value.debitors = expense.value.debitors.map((debitor) => {
+			return {
+				inhabitant: debitor.inhabitant,
+				amount: response?.data.find(x => x.inhabitant === debitor.inhabitant)?.n ?? 0
+			}
+		})
+	}
 }
 </script>
