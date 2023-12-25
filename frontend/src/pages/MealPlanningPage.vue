@@ -124,8 +124,7 @@
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useAuthStore} from 'stores/auth'
 import {useSettingsStore} from 'stores/settings'
-
-import {computed, onMounted, Ref, ref} from 'vue'
+import {computed, Ref, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {date, useQuasar} from 'quasar'
@@ -134,20 +133,11 @@ import type {Day} from 'src/models/Day'
 
 const {t} = useI18n()
 const $q = useQuasar()
-
 const inhabitantsStore = useInhabitantsStore()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 
 let currentDate = new Date()
-
-function getCurrentDateString(): string {
-	return date.formatDate(currentDate, 'YYYY') + ' ' + t('week') + ' ' + date.formatDate(currentDate, 'w')
-}
-
-function isToday(dateString: string): boolean {
-	return date.isSameDate(date.extractDate(dateString, 'YYYY-MM-DD'), Date(), 'day')
-}
 
 const columns = ref()
 const loading = ref(true)
@@ -164,6 +154,33 @@ const pagination = {
 	rowsPerPage: 7
 }
 
+inhabitantsStore.fetch().then(() => {
+	columns.value = [
+		{
+			name: 'date',
+			label: t('Date'),
+			align: 'right',
+			classes: 'q-table--col-auto-width',
+			headerClasses: 'q-table--col-auto-width',
+			field: (row: any) => row.date,
+		},
+	].concat(inhabitantsStore.getCurrentInhabitants.map(inhabitant => {
+		return {
+			name: inhabitant.id,
+			label: inhabitant.nickname,
+			align: 'left',
+			field: (row: any) => {
+				return {
+					value: row.enrolments[inhabitant.id],
+					readOnly: inhabitant.username !== authStore.inhabitant?.username &&
+						(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode),
+				}
+			}
+		}
+	}))
+})
+fetch()
+
 async function fetch() {
 	loading.value = true
 
@@ -173,7 +190,6 @@ async function fetch() {
 	})
 
 	rows.value = response?.data
-
 	loading.value = false
 }
 
@@ -236,7 +252,6 @@ function today() {
 
 function changeWeek(amount: number) {
 	currentDate = date.addToDate(currentDate, {days: 7*amount})
-
 	fetch()
 }
 
@@ -248,39 +263,17 @@ function getNumGuests(n: number) {
 	return n - 1
 }
 
+function getCurrentDateString(): string {
+	return date.formatDate(currentDate, 'YYYY') + ' ' + t('week') + ' ' + date.formatDate(currentDate, 'w')
+}
+
+function isToday(dateString: string): boolean {
+	return date.isSameDate(date.extractDate(dateString, 'YYYY-MM-DD'), Date(), 'day')
+}
+
 onBeforeRouteUpdate(() => {
 	fetch()
 })
-
-onMounted(() => {
-	inhabitantsStore.fetch().then(() => {
-		columns.value = [
-			{
-				name: 'date',
-				label: t('Date'),
-				align: 'right',
-				classes: 'q-table--col-auto-width',
-				headerClasses: 'q-table--col-auto-width',
-				field: (row: any) => row.date,
-			},
-		].concat(inhabitantsStore.getCurrentInhabitants.map(inhabitant => {
-			return {
-				name: inhabitant.id,
-				label: inhabitant.nickname,
-				align: 'left',
-				field: (row: any) => {
-					return {
-						value: row.enrolments[inhabitant.id],
-						readOnly: inhabitant.username !== authStore.inhabitant?.username &&
-							(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode),
-					}
-				}
-			}
-		}))
-	})
-	fetch()
-})
-
 </script>
 
 <style lang="scss">

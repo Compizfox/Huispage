@@ -153,6 +153,7 @@ const expenseCategoriesStore = useExpenseCategoriesStore()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 
+const balance = ref({})
 const loading = ref(true)
 const rows: Ref<Array<Expense>> = ref([])
 const pagination = ref({
@@ -161,6 +162,10 @@ const pagination = ref({
 	page: 1,
 	rowsPerPage: 25,
 	rowsNumber: 0,
+})
+const filter = ref({
+	category: null,
+	creditor: null,
 })
 
 const columns = computed(() => [
@@ -230,26 +235,31 @@ const columns = computed(() => [
 	},
 ]))
 
-const filter = ref({
-	category: null,
-	creditor: null,
+expenseCategoriesStore.fetch()
+inhabitantsStore.fetch()
+
+authStore.request({
+	url: 'balance/',
+	method: 'get',
+}).then(response => {
+	balance.value = response?.data
 })
 
-const getInhabitants = computed(() =>
-	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
-)
-
-const balance = ref({})
-
-const onRequest: QTableProps['onRequest'] = (requestProp) => {
-	pagination.value = Object.assign(pagination.value, requestProp.pagination);
-	fetch()
-}
+fetch()
 
 // Generate list of names of body cell slots for the debitor columns
 const inhabitantSlots = computed(() =>
 	getInhabitants.value.map(inhabitant => 'body-cell-' + inhabitant.username)
 )
+
+const getInhabitants = computed(() =>
+	settingsStore.showAllInhabitants ? inhabitantsStore.inhabitants : inhabitantsStore.getCurrentInhabitants
+)
+
+const onRequest: QTableProps['onRequest'] = (requestProp) => {
+	pagination.value = Object.assign(pagination.value, requestProp.pagination);
+	fetch()
+}
 
 async function fetch() {
 	loading.value = true
@@ -271,20 +281,6 @@ async function fetch() {
 
 	loading.value = false
 }
-
-onMounted(() => {
-	expenseCategoriesStore.fetch()
-	inhabitantsStore.fetch()
-
-	authStore.request({
-		url: 'balance/',
-		method: 'get',
-	}).then(response => {
-		balance.value = response?.data
-	})
-
-	fetch()
-})
 
 onBeforeRouteUpdate(() => {
 	fetch()

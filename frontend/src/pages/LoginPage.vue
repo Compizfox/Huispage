@@ -56,13 +56,12 @@ import {useQuasar} from 'quasar'
 import {api} from 'boot/axios'
 
 const $q = useQuasar()
+const authStore = useAuthStore();
 
 const username = ref('')
 const password = ref('')
 
 function onSubmit() {
-	const authStore = useAuthStore();
-
 	authStore.login(username.value, password.value).catch(e => $q.notify({
 		type: 'negative',
 		message: e.message,

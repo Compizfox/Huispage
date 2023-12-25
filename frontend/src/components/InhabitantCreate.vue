@@ -33,7 +33,7 @@ const authStore = useAuthStore()
 
 const url = 'admin/inhabitants/'
 
-// New empty Expense
+// New empty Inhabitant
 const inhabitant: Ref<Inhabitant> = ref({
 	id: null,
 	username: '',

@@ -43,34 +43,11 @@ const authStore = useAuthStore()
 
 const url = 'admin/inhabitants/' + route.params.id + '/'
 
-// New empty Expense
-const inhabitant: Ref<Inhabitant> = ref({
-	id: null,
-	username: '',
-	password: '',
-	email: '',
-	first_name: '',
-	last_name: '',
-	nickname: '',
-	language: '',
-	date_of_birth: '',
-	date_entrance: '',
-	date_leave: '',
-	is_superuser: false,
-	enrolment_preference: {
-		0: 1,
-		1: 1,
-		2: 1,
-		3: 1,
-		4: 1,
-		5: 0,
-		6: 0,
-	},
-	start_balance: 0,
-})
-
+const inhabitant: Ref<Inhabitant> = ref({} as Inhabitant)
 const inhabitant_form = ref()
 const dialog = ref()
+
+fetch()
 
 async function fetch() {
 	const response = await authStore.request({
@@ -102,9 +79,4 @@ async function onDelete() {
 
 	dialog.value.hide()
 }
-
-onMounted(() => {
-	fetch()
-})
-
 </script>

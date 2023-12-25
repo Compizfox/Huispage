@@ -45,16 +45,13 @@ const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
 const settingsStore = useSettingsStore();
 
-const expense: Ref<Expense> = ref({
-	creditor_id: null,
-	date: '',
-	description: '',
-	category: null,
-	total_amount: null,
-	debitors: [],
-})
-
+const expense: Ref<Expense> = ref({} as Expense)
 const url = 'expenses/' + route.params.id + '/'
+
+const form = ref()
+const dialog = ref()
+
+fetch()
 
 async function fetch() {
 	const response = await authStore.request({
@@ -71,9 +68,6 @@ async function fetch() {
 			debitor.amount !== 0)
 	}
 }
-
-const form = ref()
-const dialog = ref()
 
 async function onSubmit() {
 	const valid = await form.value.validate()
@@ -96,8 +90,4 @@ async function onDelete() {
 
 	dialog.value.hide()
 }
-
-onMounted(() => {
-	fetch()
-})
 </script>
