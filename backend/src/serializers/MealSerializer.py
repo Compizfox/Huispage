@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Meal, Enrolment
-
-
-class EnrolmentSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Enrolment
-		fields = ('inhabitant', 'note', 'num_guests', 'created_at', 'updated_at')
+from ..models import Meal
 
 
 class MealSerializer(serializers.ModelSerializer):
