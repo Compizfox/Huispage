@@ -62,7 +62,7 @@
 							prefix="+"
 						/>
 						<q-tooltip>
-							Guests
+							{{ t('guests') }}
 						</q-tooltip>
 					</div>
 					<q-btn
@@ -158,7 +158,7 @@ inhabitantsStore.fetch().then(() => {
 	columns.value = [
 		{
 			name: 'date',
-			label: t('Date'),
+			label: t('date'),
 			align: 'right',
 			classes: 'q-table--col-auto-width',
 			headerClasses: 'q-table--col-auto-width',

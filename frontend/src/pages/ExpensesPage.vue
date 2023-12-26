@@ -84,7 +84,7 @@
 						option-value="id"
 						option-label="name"
 						v-model="filter.category"
-						label="Category filter"
+						:label="t('category')"
 						style="width: 10em"
 					>
 						<template #option="scope">
@@ -107,7 +107,7 @@
 						option-value="id"
 						option-label="nickname"
 						v-model="filter.creditor"
-						label="Creditor"
+						:label="t('creditor')"
 						style="width: 10em"
 					/>
 					<q-checkbox

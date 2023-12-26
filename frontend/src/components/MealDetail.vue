@@ -42,7 +42,7 @@
 					rounded
 					no-caps
 					icon="delete"
-					label="Delete"
+					:label="t('to_delete')"
 					color="negative"
 					@click="onDelete"
 					v-close-popup

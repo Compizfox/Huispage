@@ -51,7 +51,7 @@
 				<div class="col-12 col-md-6">
 					<q-card>
 						<q-card-section>
-							<div class="text-h6">Inhabitant info</div>
+							<div class="text-h6">{{ t('inhabitant_info') }}</div>
 						</q-card-section>
 						<q-card-section>
 							<div class="q-gutter-y-md">
@@ -122,7 +122,7 @@
 				<div class="col-12 col-md-6">
 					<q-card>
 						<q-card-section>
-							<div class="text-h6">User preferences</div>
+							<div class="text-h6">{{ t('user_preferences') }}</div>
 						</q-card-section>
 						<q-card-section>
 							<div class="q-gutter-y-md">
@@ -135,7 +135,7 @@
 									:label="t('language')"
 								/>
 								<span>
-									Enrolment preferences
+									{{ t('enrolment_preferences') }}
 								</span>
 								<div class="row q-gutter-md" id="enrolmentPreference">
 									<q-input
