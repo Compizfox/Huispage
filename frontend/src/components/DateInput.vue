@@ -4,6 +4,7 @@
 		:model-value="modelValue"
 		@update:modelValue="value => $emit('update:modelValue', value)"
 		:label="label"
+		:error="error"
 		mask="####-##-##"
 		hide-bottom-space
 	>
@@ -27,6 +28,7 @@
 defineProps<{
 	modelValue: string,
 	label: string,
+	error: boolean,
 }>()
 defineEmits(['update:modelValue'])
 </script>

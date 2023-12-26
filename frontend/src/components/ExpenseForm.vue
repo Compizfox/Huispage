@@ -11,6 +11,7 @@
 				v-model="expense.category"
 				:label="t('category')"
 				:error="v$.category.$error"
+				hide-bottom-space
 			>
 				<template #option="scope">
 					<q-item v-bind="scope.itemProps">
@@ -35,6 +36,7 @@
 				v-model="expense.creditor_id"
 				:label="t('creditor')"
 				:error="v$.creditor_id.$error"
+				hide-bottom-space
 			/>
 
 			<q-input
@@ -42,6 +44,7 @@
 				v-model="expense.description"
 				:label="t('description')"
 				:error="v$.description.$error"
+				hide-bottom-space
 			/>
 
 			<DateInput
@@ -58,11 +61,13 @@
 				mask="#.##"
 				prefix="€"
 				:error="v$.total_amount.$error"
+				hide-bottom-space
 			/>
 
 			<q-field
 				outlined
 				:error="v$.debitors.$error"
+				hide-bottom-space
 			>
 				<div class="row q-gutter-md q-py-sm">
 					<q-input
