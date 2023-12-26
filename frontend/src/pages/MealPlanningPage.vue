@@ -1,5 +1,5 @@
 <template>
-	<q-page class="q-pa-md">
+	<q-page padding>
 		<router-view></router-view>
 		<q-table
 			:rows="rows"

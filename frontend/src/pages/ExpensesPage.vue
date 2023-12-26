@@ -1,8 +1,8 @@
 <template>
-	<q-page class="q-gutter-y-md">
+	<q-page padding>
 		<router-view></router-view>
 
-		<div class="row q-gutter-md">
+		<div class="row q-gutter-md q-mb-md">
 			<q-card
 				v-for="inhabitant in getInhabitants" :key="inhabitant"
 			>
