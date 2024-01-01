@@ -10,7 +10,7 @@
 				flat
 				rounded
 				icon="delete"
-				:label="t('delete')"
+				:label="t('to_delete')"
 				color="negative"
 				@click="onDelete"
 				v-close-popup
@@ -19,7 +19,7 @@
 				flat
 				rounded
 				icon="save"
-				label="OK"
+				:label="t('to_save')"
 				@click="onSubmit"
 				color="primary"
 			/>

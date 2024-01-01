@@ -10,7 +10,7 @@
 				flat
 				rounded
 				icon="save"
-				label="OK"
+				:label="t('to_save')"
 				color="primary"
 				@click="onSubmit"
 			/>

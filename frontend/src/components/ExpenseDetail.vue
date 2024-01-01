@@ -10,7 +10,7 @@
 				flat
 				rounded
 				icon="delete"
-				:label="t('delete')"
+				:label="t('to_delete')"
 				color="negative"
 				@click="onDelete"
 				v-close-popup
@@ -19,7 +19,7 @@
 				flat
 				rounded
 				icon="save"
-				label="OK"
+				:label="t('to_save')"
 				@click="onSubmit"
 				color="primary"
 			/>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, Ref} from 'vue'
+import {ref, Ref} from 'vue'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
