@@ -43,7 +43,7 @@ const authStore = useAuthStore()
 
 const url = 'admin/inhabitants/' + route.params.id + '/'
 
-const inhabitant: Ref<Inhabitant> = ref({} as Inhabitant)
+const inhabitant: Ref<Inhabitant> = ref({enrolment_preference: {}} as Inhabitant)
 const inhabitant_form = ref()
 const dialog = ref()
 
