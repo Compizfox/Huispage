@@ -284,7 +284,7 @@ onBeforeRouteUpdate(() => {
 	}
 }
 
-#mealPlanning th, .q-table td {
+#mealPlanning th, #mealPlanning .q-table td {
 	padding: 4px;
 }
 
