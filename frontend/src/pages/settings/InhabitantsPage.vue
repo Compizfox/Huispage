@@ -1,36 +1,32 @@
 <template>
-	<q-page padding>
+	<q-page>
 		<router-view></router-view>
 
-		<q-card>
-			<q-card-section>
-				<div class="text-h4">{{ t('inhabitants') }}</div>
-			</q-card-section>
-			<q-table
-				:rows="rows"
-				:columns="columns"
-				:loading="loading"
-				row-key="id"
-				:rows-per-page-options="[0]"
-				hide-pagination
-			>
-				<template #top-right>
-					<router-link
-						:to="{ name: 'createInhabitant' }"
-					>
-						<q-btn color="primary" :label="t('new')"/>
-					</router-link>
-				</template>
+		<q-table
+			:rows="rows"
+			:columns="columns"
+			:loading="loading"
+			row-key="id"
+			:rows-per-page-options="[0]"
+			hide-pagination
+			:title="t('inhabitants')"
+		>
+			<template #top-right>
+				<router-link
+					:to="{ name: 'createInhabitant' }"
+				>
+					<q-btn color="primary" :label="t('new')"/>
+				</router-link>
+			</template>
 
-				<template #body-cell-edit="props">
-					<q-td :props="props">
-						<router-link :to="{ name: 'inhabitantDetail', params: { id: props.row.id }}">
-							<q-icon name="edit"/>
-						</router-link>
-					</q-td>
-				</template>
-			</q-table>
-		</q-card>
+			<template #body-cell-edit="props">
+				<q-td :props="props">
+					<router-link :to="{ name: 'inhabitantDetail', params: { id: props.row.id }}">
+						<q-icon name="edit"/>
+					</router-link>
+				</q-td>
+			</template>
+		</q-table>
 	</q-page>
 </template>
 
