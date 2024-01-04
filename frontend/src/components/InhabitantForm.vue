@@ -160,7 +160,6 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {Inhabitant} from 'src/models/admin/Inhabitant'
 import DateInput from 'components/DateInput.vue'
@@ -184,12 +183,11 @@ const dows = {
 	6: 'Sunday',
 }
 
-// For component v-model
 const props = defineProps<{
-	modelValue: Inhabitant,
 	passwordRequired: boolean,
 }>()
-const emit = defineEmits(['update:modelValue', 'onSubmit'])
+
+const inhabitant = defineModel<Inhabitant>({required: true})
 
 const validations = {
 	username: { required },
@@ -204,15 +202,6 @@ const validations = {
 	date_leave: {},
 	start_balance: { required, decimal, }
 }
-
-const inhabitant = computed({
-	get() {
-		return props.modelValue
-	},
-	set(value) {
-		emit('update:modelValue', inhabitant)
-	}
-})
 
 const v$ = useVuelidate(validations, inhabitant, {$lazy: true, $autoDirty: true})
 

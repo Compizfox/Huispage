@@ -88,7 +88,6 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useExpenseCategoriesStore} from 'stores/expenseCategories'
 import type {Expense} from 'src/models/Expense'
@@ -103,10 +102,7 @@ const expenseCategoriesStore = useExpenseCategoriesStore()
 const inhabitantsStore = useInhabitantsStore()
 const authStore = useAuthStore()
 
-// For component v-model
-const props = defineProps<{ modelValue: Expense }>()
-const emit = defineEmits(['update:modelValue', 'onSubmit'])
-
+const expense = defineModel<Expense>({required: true})
 
 const validations = {
 	category: { required, integer },
@@ -130,15 +126,6 @@ const validations = {
 		debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur) > 0)
 	}
 }
-
-const expense = computed({
-	get() {
-		return props.modelValue
-	},
-	set(value) {
-		emit('update:modelValue', expense)
-	}
-})
 
 const v$ = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
 

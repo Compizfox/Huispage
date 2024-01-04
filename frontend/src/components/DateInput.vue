@@ -1,8 +1,7 @@
 <template>
 	<q-input
 		outlined
-		:model-value="modelValue"
-		@update:modelValue="value => $emit('update:modelValue', value)"
+		v-model="model"
 		:label="label"
 		:error="error"
 		mask="####-##-##"
@@ -12,10 +11,9 @@
 			<q-icon name="event" class="cursor-pointer">
 				<q-popup-proxy ref="datepickerProxy">
 					<q-date
-						:model-value="modelValue"
-						@update:modelValue="value => $emit('update:modelValue', value)"
-						minimal
+						v-model="model"
 						@update:model-value="$refs.datepickerProxy.hide()"
+						minimal
 						today-btn
 					/>
 				</q-popup-proxy>
@@ -25,10 +23,9 @@
 </template>
 
 <script setup lang="ts">
+const model = defineModel<string>({required: true})
 defineProps<{
-	modelValue: string,
 	label: string,
 	error: boolean,
 }>()
-defineEmits(['update:modelValue'])
 </script>
