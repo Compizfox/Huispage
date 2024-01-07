@@ -238,13 +238,6 @@ const columns = computed(() => [
 expenseCategoriesStore.fetch()
 inhabitantsStore.fetch()
 
-authStore.request({
-	url: 'balance/',
-	method: 'get',
-}).then(response => {
-	balance.value = response?.data
-})
-
 fetch()
 
 // Generate list of names of body cell slots for the debitor columns
@@ -264,6 +257,7 @@ const onRequest: QTableProps['onRequest'] = (requestProp) => {
 async function fetch() {
 	loading.value = true
 
+	// Fetch expenses
 	let response = await authStore.request({
 		url: 'expenses/',
 		method: 'get',
@@ -278,6 +272,14 @@ async function fetch() {
 
 	pagination.value.rowsNumber = response?.data.count
 	rows.value = response?.data.results
+
+	// Fetch balances
+	authStore.request({
+		url: 'balance/',
+		method: 'get',
+	}).then(response => {
+		balance.value = response?.data
+	})
 
 	loading.value = false
 }
