@@ -48,24 +48,26 @@
 					v-close-popup
 					v-if="!readOnly"
 				/>
-				<q-btn
-					flat
-					rounded
-					no-caps
-					icon="receipt"
-					:label="t('save_and_create_expense')"
-					@click="onSaveAndCreateExpense"
-					v-if="meal.expense == null"
-				/>
-				<q-btn
-					flat
-					rounded
-					no-caps
-					icon="receipt"
-					:label="t('save_and_edit_expense')"
-					@click="onSaveAndEditExpense"
-					v-else
-				/>
+				<template v-if="!readOnly">
+					<q-btn
+						flat
+						rounded
+						no-caps
+						icon="receipt"
+						:label="t('save_and_create_expense')"
+						@click="onSaveAndCreateExpense"
+						v-if="meal.expense == null"
+					/>
+					<q-btn
+						flat
+						rounded
+						no-caps
+						icon="receipt"
+						:label="t('save_and_edit_expense')"
+						@click="onSaveAndEditExpense"
+						v-else
+					/>
+				</template>
 				<q-btn
 					flat
 					rounded
