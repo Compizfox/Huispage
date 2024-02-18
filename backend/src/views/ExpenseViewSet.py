@@ -7,6 +7,8 @@ from rest_framework.pagination import PageNumberPagination
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from django.conf import settings
+
 from ..models import Expense
 from ..serializers import ExpenseSerializer
 
@@ -40,8 +42,23 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 	pagination_class = Pagination
 
 	def update(self, request: Request, *args, **kwargs) -> Response:
-		# Deny updating others' expenses for non-admin users
-		if request.data['creditor_id'] != request.user.inhabitant.pk and not request.user.is_superuser:
-			raise PermissionDenied
+		if not kwargs['partial']:
+			# Deny updating others' expenses for non-admin users
+			if request.data['creditor_id'] != request.user.inhabitant.pk and not \
+			   request.user.is_superuser and not \
+			   settings.HUISPAGE_PUBLICLY_EDITABLE_DEBITORS:
+				raise PermissionDenied
 
 		return super().update(request, *args, **kwargs)
+
+	def partial_update(self, request: Request, *args, **kwargs) -> Response:
+		# Only allow updating own debitor amount
+		for k, v in request.data.items():
+			if k != 'debitors':
+				raise PermissionDenied
+			else:
+				for debitor in v:
+					if debitor['inhabitant'] != request.user.inhabitant.pk:
+						raise PermissionDenied
+
+		return super().partial_update(request, *args, **kwargs)
