@@ -17,17 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import (
-	InhabitantList,
-	InhabitantViewSet,
-	ExpenseViewSet,
-	ExpenseCategoryViewSet,
-	EnrolmentViewSet,
-	DailiesView,
-	MealViewSet,
-	ExpenseImportView,
-	get_balance,
-	set_csrf_token, login, logout)
+from .views import *
 
 router = routers.SimpleRouter()
 router.register('admin/inhabitants',  InhabitantViewSet)
@@ -42,6 +32,7 @@ urlpatterns = [
 	path('api/dailies/<int:year>/<int:week>/', DailiesView.as_view()),
 	path('api/admin/expensesimport/', ExpenseImportView.as_view()),
 	path('api/balance/', get_balance),
+	path('api/settings/', get_settings),
 
 	path('api/inhabitants/', InhabitantList.as_view()),
 
