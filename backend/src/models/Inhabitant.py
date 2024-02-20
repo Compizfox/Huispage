@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 
 from django.db import models
 from django.utils import timezone
@@ -49,9 +50,9 @@ class Inhabitant(models.Model):
 		return self.enrolment_preference[str(date.weekday())]
 
 	def get_enrolment_or_preference(self, date: datetime.date) -> int:
-		enrolment = self.enrolments.filter(date=date)
-		return enrolment[0].n if enrolment.exists() else self.get_enrolment_preference(date)
+		enrolment = self.enrolments.filter(date=date).first()
+		return enrolment.n if enrolment else self.get_enrolment_preference(date)
 
-	def get_balance(self) -> float:
+	def get_balance(self) -> Decimal:
 		return sum([-debitor.expense.unit_price * debitor.amount for debitor in self.debitor_set.all()] +
 		           [expense.total_amount for expense in self.paid_expenses.all()]) + self.start_balance

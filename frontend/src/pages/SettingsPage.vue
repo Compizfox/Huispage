@@ -23,9 +23,4 @@ import {ref} from 'vue'
 const {t} = useI18n()
 
 const drawer = ref(true)
-
 </script>
-
-<style>
-
-</style>

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
@@ -20,7 +22,7 @@ class Expense(models.Model):
 	description = models.CharField(max_length=100, blank=True)
 
 	@property
-	def unit_price(self) -> float | None:
+	def unit_price(self) -> Decimal | None:
 		"""
 		Price per debitor
 		"""
