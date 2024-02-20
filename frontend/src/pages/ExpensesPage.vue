@@ -52,11 +52,7 @@
 
 			<template #body-cell-edit="props">
 				<q-td :props="props">
-					<router-link
-						v-if="props.row.creditor_id === authStore.inhabitant?.id ||
-						(authStore.inhabitant?.is_superuser && settingsStore.adminMode)"
-						:to="{ name: 'expenseDetail', params: { id: props.row.id }}"
-					>
+					<router-link :to="{ name: 'expenseDetail', params: { id: props.row.id }}">
 						<q-icon name="edit"/>
 					</router-link>
 				</q-td>
@@ -133,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, computed} from 'vue'
+import {ref, computed} from 'vue'
 import {date} from 'quasar'
 import {onBeforeRouteUpdate} from 'vue-router'
 import {useSettingsStore} from 'stores/settings'
@@ -237,6 +233,7 @@ const columns = computed(() => [
 
 expenseCategoriesStore.fetch()
 inhabitantsStore.fetch()
+settingsStore.fetch()
 
 fetch()
 

@@ -4,7 +4,13 @@
 			<q-icon name="receipt_long"/>
 			{{ expense.description }}
 		</template>
-		<ExpenseForm ref="form" v-model="expense" @onSubmit="onSubmit"/>
+		<ExpenseForm
+			ref="form"
+			v-model="expense"
+			@onSubmit="onSubmit"
+			:readOnly="readOnly"
+			:publiclyEditableAmount="settingsStore.server.publicly_editable_debitors"
+		/>
 		<q-card-actions align="around">
 			<q-btn
 				flat
@@ -28,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, Ref} from 'vue'
+import {ref, Ref, computed} from 'vue'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import {useAuthStore} from 'stores/auth';
@@ -53,6 +59,11 @@ const dialog = ref()
 
 fetch()
 
+const readOnly = computed(() =>
+	expense.value.creditor_id != authStore.inhabitant?.id &&
+	!(authStore.inhabitant?.is_superuser && settingsStore.adminMode)
+)
+
 async function fetch() {
 	const response = await authStore.request({
 		url: url,
@@ -73,11 +84,25 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	await authStore.request({
-		url: url,
-		method: 'put',
-		data: expense.value,
-	})
+	if(readOnly.value && settingsStore.server.publicly_editable_debitors) {
+		// Perform partial update
+		await authStore.request({
+			url: url,
+			method: 'patch',
+			data: {
+				debitors: [{
+						inhabitant: authStore.inhabitant!.id,
+						amount: expense.value.debitors.find(x => x.inhabitant === authStore.inhabitant!.id)?.amount,
+				}]
+			}
+		})
+	} else {
+		await authStore.request({
+			url: url,
+			method: 'put',
+			data: expense.value,
+		})
+	}
 
 	dialog.value.hide()
 }

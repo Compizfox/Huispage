@@ -10,8 +10,9 @@
 				option-label="name"
 				v-model="expense.category"
 				:label="t('category')"
-				:error="v$.category.$error"
+				:error="v.category.$error"
 				hide-bottom-space
+				:disable="readOnly"
 			>
 				<template #option="scope">
 					<q-item v-bind="scope.itemProps">
@@ -27,7 +28,6 @@
 
 			<q-select
 				outlined
-				v-if="authStore.inhabitant?.is_superuser"
 				emit-value
 				map-options
 				:options="inhabitantsStore.getCurrentInhabitants"
@@ -35,22 +35,25 @@
 				option-label="nickname"
 				v-model="expense.creditor_id"
 				:label="t('creditor')"
-				:error="v$.creditor_id.$error"
+				:error="v.creditor_id.$error"
 				hide-bottom-space
+				:disable="readOnly"
 			/>
 
 			<q-input
 				outlined
 				v-model="expense.description"
 				:label="t('description')"
-				:error="v$.description.$error"
+				:error="v.description.$error"
 				hide-bottom-space
+				:disable="readOnly"
 			/>
 
 			<DateInput
 				v-model="expense.date"
 				:label="t('date')"
-				:error="v$.date.$error"
+				:error="v.date.$error"
+				:disable="readOnly"
 			/>
 
 			<q-input
@@ -60,13 +63,14 @@
 				:label="t('total_price')"
 				mask="#.##"
 				prefix="€"
-				:error="v$.total_amount.$error"
+				:error="v.total_amount.$error"
 				hide-bottom-space
+				:disable="readOnly"
 			/>
 
 			<q-field
 				outlined
-				:error="v$.debitors.$error"
+				:error="v.debitors.$error"
 				hide-bottom-space
 			>
 				<div class="row q-gutter-md q-py-sm">
@@ -80,6 +84,7 @@
 						mask="#"
 						dense
 						class="col-2"
+						:disable="disable(debitor.inhabitant)"
 					/>
 				</div>
 			</q-field>
@@ -104,6 +109,20 @@ const authStore = useAuthStore()
 
 const expense = defineModel<Expense>({required: true})
 
+const props = defineProps<{
+	readOnly: boolean
+	publiclyEditableAmount: boolean
+}>()
+
+function disable(inhabitant: number) {
+	if(props.readOnly) {
+		return !(authStore.inhabitant!.id === inhabitant && props.publiclyEditableAmount)
+	} else {
+		return false
+	}
+}
+
+
 const validations = {
 	category: { required, integer },
 	creditor_id: {required, integer },
@@ -127,10 +146,10 @@ const validations = {
 	}
 }
 
-const v$ = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
+const v = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
 
 async function validate() {
-	return await v$.value.$validate()
+	return await v.value.$validate()
 }
 
 defineExpose({
