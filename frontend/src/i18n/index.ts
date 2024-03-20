@@ -50,6 +50,7 @@ export default {
 		'enrolment_preferences': 'Enrolment preferences',
 		'guests': 'Guests',
 		'double_meal_expense': 'A meal expense for this date already exists.',
+		'expense': 'Expense',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -101,5 +102,6 @@ export default {
 		'enrolment_preferences': 'Inschrijfvoorkeuren',
 		'guests': 'Gasten',
 		'double_meal_expense': 'Er bestaat al een kookuitgave voor deze dag.',
+		'expense': 'Uitgave',
 	},
 }

@@ -79,6 +79,15 @@
 					v-close-popup
 					v-if="!readOnly"
 				/>
+				<q-btn
+					flat
+					rounded
+					no-caps
+					icon="receipt"
+					:label="t('expense')"
+					:to="{name: 'expenseDetail', params: {id: meal.expense}}"
+					v-if="readOnly && meal.expense"
+				/>
 			</q-card-actions>
 		</q-form>
 	</NestedCardDialog>
