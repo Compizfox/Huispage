@@ -34,22 +34,24 @@
 </template>
 
 <script setup lang="ts">
-import {ref, Ref, computed} from 'vue'
+import {computed, Ref, ref} from 'vue'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
-import {useAuthStore} from 'stores/auth';
+import {useAuthStore} from 'stores/auth'
 import {useRoute} from 'vue-router'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useSettingsStore} from 'stores/settings'
-
 import type {Expense} from 'src/models/Expense'
 import {useI18n} from 'vue-i18n'
+import axios from 'axios'
+import {useQuasar} from 'quasar'
 
 const {t} = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
-const inhabitantsStore = useInhabitantsStore();
-const settingsStore = useSettingsStore();
+const inhabitantsStore = useInhabitantsStore()
+const settingsStore = useSettingsStore()
+const $q = useQuasar()
 
 const expense: Ref<Expense> = ref({} as Expense)
 const url = 'expenses/' + route.params.id + '/'
@@ -84,27 +86,40 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	if(readOnly.value && settingsStore.server.publicly_editable_debitors) {
+	if (readOnly.value && settingsStore.server.publicly_editable_debitors) {
 		// Perform partial update
 		await authStore.request({
 			url: url,
 			method: 'patch',
 			data: {
 				debitors: [{
-						inhabitant: authStore.inhabitant!.id,
-						amount: expense.value.debitors.find(x => x.inhabitant === authStore.inhabitant!.id)?.amount,
+					inhabitant: authStore.inhabitant!.id,
+					amount: expense.value.debitors.find(x => x.inhabitant === authStore.inhabitant!.id)?.amount,
 				}]
 			}
 		})
-	} else {
-		await authStore.request({
-			url: url,
-			method: 'put',
-			data: expense.value,
-		})
-	}
 
-	dialog.value.hide()
+		dialog.value.hide()
+	} else {
+		try {
+			await authStore.request({
+				url: url,
+				method: 'put',
+				data: expense.value,
+			})
+
+			dialog.value.hide()
+		} catch (e) {
+			if (axios.isAxiosError(e)) {
+				if (e.response?.data['category']) {
+					$q.notify({
+						type: 'negative',
+						message: t('double_meal_expense'),
+					})
+				}
+			}
+		}
+	}
 }
 
 async function onDelete() {

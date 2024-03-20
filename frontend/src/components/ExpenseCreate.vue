@@ -25,16 +25,19 @@ import {useAuthStore} from 'stores/auth';
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
+import {useQuasar} from 'quasar'
 import ExpenseForm from 'components/ExpenseForm.vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
 import type {Expense} from 'src/models/Expense'
 import {useSettingsStore} from 'stores/settings'
+import axios from 'axios'
 
 const {t} = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore();
 const settingsStore = useSettingsStore();
+const $q = useQuasar()
 
 const url = 'expenses/'
 
@@ -71,13 +74,24 @@ async function onSubmit() {
 	const valid = await form.value.validate()
 	if (!valid) return
 
-	await authStore.request({
-		url: url,
-		method: 'post',
-		data: expense.value,
-	})
+	try {
+		await authStore.request({
+			url: url,
+			method: 'post',
+			data: expense.value,
+		})
 
-	dialog.value.hide()
+		dialog.value.hide()
+	} catch (e) {
+		if (axios.isAxiosError(e)) {
+			if (e.response?.data['category']) {
+				$q.notify({
+					type: 'negative',
+					message: t('double_meal_expense'),
+				})
+			}
+		}
+	}
 }
 
 async function fetch() {
