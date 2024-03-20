@@ -42,7 +42,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 	pagination_class = Pagination
 
 	def update(self, request: Request, *args, **kwargs) -> Response:
-		if not kwargs['partial']:
+		if not kwargs.get('partial'):
 			# Deny updating others' expenses for non-admin users
 			if request.data['creditor_id'] != request.user.inhabitant.pk and not \
 			   request.user.is_superuser and not \
