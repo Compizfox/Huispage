@@ -1,11 +1,9 @@
 import {defineStore} from 'pinia'
 import {api} from 'boot/axios'
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
-import {useQuasar} from 'quasar'
+import {Notify} from 'quasar'
 
 import type {Inhabitant} from 'src/models/Inhabitant'
-
-const $q = useQuasar()
 
 export const useAuthStore = defineStore('auth', {
 	state: () => ({
@@ -45,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
 					if (e.response?.status === 403) {
 						await this.logout()
 					} else {
-						$q.notify({
+						Notify.create({
 							type: 'negative',
 							message: e.message,
 						})
@@ -56,5 +54,4 @@ export const useAuthStore = defineStore('auth', {
 			}
 		}
 	}
-});
-
+})
