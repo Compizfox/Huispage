@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueForDateValidator
 
 from ..models import Expense, Inhabitant, Debitor
 from .DebitorSerializer import DebitorSerializer
@@ -9,6 +10,14 @@ class ExpenseSerializer(serializers.ModelSerializer):
 		model = Expense
 		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'created_at', 'updated_at',
 		          'total_amount', 'unit_price', 'description')
+		validators = [
+			# Only one meal expense can exist per day
+			UniqueForDateValidator(
+				queryset=Expense.objects.filter(category=1),
+				field='category',
+				date_field='date'
+			)
+		]
 
 	debitors = DebitorSerializer(source='get_debitors', many=True)
 	creditor_id = serializers.PrimaryKeyRelatedField(source='creditor', queryset=Inhabitant.objects.all())
@@ -42,3 +51,13 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 		instance.save()
 		return instance
+
+	def validate(self, data):
+		"""
+		Assert that sum of debitor shares is not negative.
+		"""
+		total_amount = sum([item['amount'] for item in data['get_debitors']])
+		if total_amount < 0:
+			raise serializers.ValidationError('Sum of debitor shares should be > 0')
+
+		return data

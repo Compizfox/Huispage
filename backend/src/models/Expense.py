@@ -52,7 +52,3 @@ class Expense(models.Model):
 			'inhabitant': x,
 			'amount': x.amount,
 		} for x in inhabitants]
-
-	def clean(self):
-		if self.debitor_set.aggregate(models.Sum('amount'))['amount__sum'] < 0:
-			raise ValidationError('Sum of debitor shares should be > 0')
