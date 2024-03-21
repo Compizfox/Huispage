@@ -1,8 +1,8 @@
 from decimal import Decimal
 
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db.models import Q, UniqueConstraint
 
 from .Inhabitant import Inhabitant
 from .ExpenseCategory import ExpenseCategory
@@ -20,6 +20,12 @@ class Expense(models.Model):
 	date = models.DateField()
 
 	description = models.CharField(max_length=100, blank=True)
+
+	class Meta:
+		constraints = [
+			UniqueConstraint(fields=['category', 'date'], condition=Q(category=1),
+			                 name='single_meal_expense')
+		]
 
 	@property
 	def unit_price(self) -> Decimal | None:

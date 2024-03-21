@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueForDateValidator
+from django.core.exceptions import ValidationError
 
 from ..models import Expense, Inhabitant, Debitor
 from .DebitorSerializer import DebitorSerializer
@@ -10,14 +10,6 @@ class ExpenseSerializer(serializers.ModelSerializer):
 		model = Expense
 		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'created_at', 'updated_at',
 		          'total_amount', 'unit_price', 'description')
-		validators = [
-			# Only one meal expense can exist per day
-			UniqueForDateValidator(
-				queryset=Expense.objects.filter(category=1),
-				field='category',
-				date_field='date'
-			)
-		]
 
 	debitors = DebitorSerializer(source='get_debitors', many=True)
 	creditor_id = serializers.PrimaryKeyRelatedField(source='creditor', queryset=Inhabitant.objects.all())
@@ -26,7 +18,13 @@ class ExpenseSerializer(serializers.ModelSerializer):
 	def create(self, validated_data: dict) -> Expense:
 		# Handle creation for relation: create debitors
 		debitors_data = validated_data.pop('get_debitors')
-		expense = Expense.objects.create(**validated_data)
+		expense = Expense(**validated_data)
+		try:
+			expense.validate_constraints()
+		except ValidationError:
+			raise serializers.ValidationError('double_meal_expense')
+		expense.save()
+
 		for debitor_data in debitors_data:
 			if debitor_data['amount'] != 0:
 				Debitor.objects.create(expense=expense, **debitor_data)
@@ -49,7 +47,12 @@ class ExpenseSerializer(serializers.ModelSerializer):
 		for attr, value in validated_data.items():
 			setattr(instance, attr, value)
 
+		try:
+			instance.validate_constraints()
+		except ValidationError:
+			raise serializers.ValidationError('double_meal_expense')
 		instance.save()
+
 		return instance
 
 	def validate(self, data):
