@@ -55,7 +55,7 @@
 .q-page-container {
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 75rem;
+	width: fit-content;
 }
 
 .q-page {
