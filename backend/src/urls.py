@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
+from rest_framework_nested import routers
 
 from .views import *
 
@@ -25,6 +25,9 @@ router.register('expenses', ExpenseViewSet)
 router.register('expense_categories', ExpenseCategoryViewSet)
 router.register('enrolments', EnrolmentViewSet)
 router.register('meals', MealViewSet)
+
+meals_router = routers.NestedSimpleRouter(router, 'meals', lookup='meal')
+meals_router.register('ratings', MealRatingViewSet, basename='mealrating')
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -41,4 +44,5 @@ urlpatterns = [
 	path('api/auth/logout', logout),
 
 	path('api/', include(router.urls)),
+	path('api/', include(meals_router.urls)),
 ]

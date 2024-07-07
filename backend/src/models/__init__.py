@@ -5,3 +5,4 @@ from .Inhabitant import Inhabitant
 from .Meal import Meal
 from .Debitor import Debitor
 from .ExpenseCategory import ExpenseCategory
+from .MealRating import MealRating

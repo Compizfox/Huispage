@@ -9,3 +9,4 @@ from .ExpenseImportView import ExpenseImportView
 from .Balance import get_balance
 from .auth import *
 from .Settings import *
+from .MealRatingViewSet import *
