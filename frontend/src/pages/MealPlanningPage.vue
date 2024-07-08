@@ -50,8 +50,8 @@
 					<div class="row inline cursor-pointer">
 						<q-input
 							type="number"
-							v-if="props.row.enrolments[props.col.name] > 1 || props.row.enrolments[props.col.name] > 0
-							&& !props.value.readOnly"
+							v-if="props.row.enrolments[props.col.name] > 1 || (props.row.enrolments[props.col.name] > 0
+							&& !props.value.readOnly)"
 							:model-value="getNumGuests(props.row.enrolments[props.col.name])"
 							@update:model-value="(value, evt) =>
 						onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
@@ -172,7 +172,7 @@ inhabitantsStore.fetch().then(() => {
 			field: (row: any) => {
 				return {
 					value: row.enrolments[inhabitant.id],
-					readOnly: inhabitant.username !== authStore.inhabitant?.username &&
+					readOnly: (inhabitant.username !== authStore.inhabitant?.username || isBeforeToday(row.date)) &&
 						(!authStore.inhabitant?.is_superuser || !settingsStore.adminMode),
 				}
 			}
@@ -269,6 +269,10 @@ function getCurrentDateString(): string {
 
 function isToday(dateString: string): boolean {
 	return date.isSameDate(date.extractDate(dateString, 'YYYY-MM-DD'), Date(), 'day')
+}
+
+function isBeforeToday(dateString: string): boolean {
+	return date.extractDate(dateString, 'YYYY-MM-DD') < new Date(new Date().toDateString())
 }
 
 onBeforeRouteUpdate(() => {
