@@ -1,7 +1,7 @@
 <template>
 	<q-layout view="hHh lpR fFf">
 		<q-page-container>
-			<q-page class="row justify-center items-center" style="background: linear-gradient(#8274C5, #5A4A9F);">
+			<q-page class="row justify-center items-center">
 				<div class="column">
 					<div class="row">
 						<q-card class="shadow-24">
@@ -72,3 +72,13 @@ onMounted(() => {
 	api.get('auth/set_csrf_token')
 })
 </script>
+
+<style scoped>
+.q-page-container {
+	width: 100%;
+}
+
+.q-page {
+	background: linear-gradient(#8274C5, #5A4A9F);
+}
+</style>
