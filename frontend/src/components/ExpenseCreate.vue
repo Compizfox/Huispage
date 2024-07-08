@@ -46,7 +46,7 @@ const expense: Ref<Expense> = ref({
 	creditor_id: authStore.inhabitant!.id,
 	date: date.formatDate(Date.now(), 'YYYY-MM-DD'),
 	description: '',
-	category: 1,
+	category: undefined,
 	total_amount: 0,
 	debitors: [],
 })
