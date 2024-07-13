@@ -23,7 +23,7 @@ class EnrolmentViewSet(viewsets.ModelViewSet):
 
 	def create(self, request: Request, *args, **kwargs) -> Response:
 		# Deny creating Enrolments before today for non-admin users
-		if datetime.strptime(request.data['date'], "%Y/%m/%d") < datetime.now() and not request.user.is_superuser:
+		if datetime.strptime(request.data['date'], "%Y-%m-%d") < datetime.now() and not request.user.is_superuser:
 			raise PermissionDenied
 
 		# (Partially) update Enrolment if exists, else create new one
