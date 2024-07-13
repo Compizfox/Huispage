@@ -41,18 +41,26 @@
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
 					<q-checkbox
-						:model-value="isEnrolled(props.row.enrolments[props.col.name])"
+						:model-value="isEnrolled(props.value.value.n)"
 						:disable="props.value.readOnly"
 						checked-icon="chair_alt"
 						@update:model-value="(value, evt) =>
-						onChangeEnrolmentCheckbox(props.rowIndex, props.col.name, props.row.date, value)"
-					/>
-					<div class="row inline cursor-pointer">
+					onChangeEnrolmentCheckbox(props.rowIndex, props.col.name, props.row.date, value)"
+					>
+						<q-tooltip
+							v-if="props.value.value.updated_at"
+						>
+							{{ date.formatDate(props.value.value.updated_at, 'YYYY-MM-DD H:mm:ss') }}
+						</q-tooltip>
+					</q-checkbox>
+
+					<div
+						class="row inline cursor-pointer"
+						v-if="props.value.value.n > 1 || (props.value.value.n > 0 && !props.value.readOnly)"
+					>
 						<q-input
 							type="number"
-							v-if="props.row.enrolments[props.col.name] > 1 || (props.row.enrolments[props.col.name] > 0
-							&& !props.value.readOnly)"
-							:model-value="getNumGuests(props.row.enrolments[props.col.name])"
+							:model-value="getNumGuests(props.value.value.n)"
 							@update:model-value="(value, evt) =>
 						onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
 							:disable="props.value.readOnly"
@@ -74,7 +82,7 @@
 						v-if="props.row.meal?.cook === props.col.name"
 					>
 						<q-badge color="accent" floating>
-							{{ Object.values(props.row.enrolments).reduce((a, b) => a + b, 0) }}
+							{{ Object.values(props.row.enrolments).reduce((a, b) => a + b.n, 0) }}
 						</q-badge>
 						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
 					</q-btn>
@@ -194,17 +202,11 @@ async function fetch() {
 }
 
 function onChangeEnrolmentCheckbox(row_id: number, inhabitant_id: number, date: string, value: boolean) {
-	let n = value ? 1 : 0
-	rows.value[row_id].enrolments[inhabitant_id] = n
-
-	postEnrolments(inhabitant_id, date, n)
+	postEnrolments(inhabitant_id, date, value ? 1 : 0)
 }
 
 function onChangeNumGuests(row_id: number, inhabitant_id: number, date: string, value: number) {
-	let n = Number(value) + 1
-	rows.value[row_id].enrolments[inhabitant_id] = n
-
-	postEnrolments(inhabitant_id, date, n)
+	postEnrolments(inhabitant_id, date, Number(value) + 1)
 }
 
 async function postEnrolments(inhabitant_id: number, date: string, value: number) {

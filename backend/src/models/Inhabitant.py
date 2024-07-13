@@ -1,5 +1,6 @@
 import datetime
 from decimal import Decimal
+from typing import Dict
 
 from django.db import models
 from django.utils import timezone
@@ -49,9 +50,18 @@ class Inhabitant(models.Model):
 		# JSON field is indexed by strings
 		return self.enrolment_preference[str(date.weekday())]
 
-	def get_enrolment_or_preference(self, date: datetime.date) -> int:
+	def get_enrolment_or_preference(self, date: datetime.date) -> Dict:
 		enrolment = self.enrolments.filter(date=date).first()
-		return enrolment.n if enrolment else self.get_enrolment_preference(date)
+		if enrolment:
+			return {
+				'n': enrolment.n,
+				'updated_at': enrolment.updated_at,
+			}
+		else:
+			return {
+				'n': self.get_enrolment_preference(date),
+				'updated_at': None,
+			}
 
 	def get_balance(self) -> Decimal:
 		return sum([-debitor.expense.unit_price * debitor.amount for debitor in self.debitor_set.all()] +
