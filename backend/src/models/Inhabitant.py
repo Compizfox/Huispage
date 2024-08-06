@@ -47,8 +47,8 @@ class Inhabitant(models.Model):
 		super().save()
 
 	def get_enrolment_preference(self, date: datetime.date) -> int:
-		# JSON field is indexed by strings
-		return self.enrolment_preference[str(date.weekday())]
+		#                                JSON field is indexed by strings
+		return self.enrolment_preference[str(date.weekday())] if date >= self.date_entrance else 0
 
 	def get_enrolment_or_preference(self, date: datetime.date) -> Dict:
 		enrolment = self.enrolments.filter(date=date).first()
