@@ -295,7 +295,7 @@ onBeforeRouteUpdate(() => {
 }
 
 #mealPlanning td {
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 #mealPlanning input[type="number"] {
