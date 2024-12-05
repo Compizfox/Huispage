@@ -255,7 +255,7 @@ async function fetch() {
 	loading.value = true
 
 	// Fetch expenses
-	let response = await authStore.request({
+	let response = authStore.request({
 		url: 'expenses/',
 		method: 'get',
 		params: {
@@ -265,10 +265,11 @@ async function fetch() {
 			page: pagination.value.page,
 			page_size: pagination.value.rowsPerPage,
 		}
+	}).then(response => {
+		pagination.value.rowsNumber = response?.data.count
+		rows.value = response?.data.results
+		loading.value = false
 	})
-
-	pagination.value.rowsNumber = response?.data.count
-	rows.value = response?.data.results
 
 	// Fetch balances
 	authStore.request({
@@ -277,8 +278,6 @@ async function fetch() {
 	}).then(response => {
 		balance.value = response?.data
 	})
-
-	loading.value = false
 }
 
 onBeforeRouteUpdate(() => {
