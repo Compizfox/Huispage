@@ -62,7 +62,3 @@ class Inhabitant(models.Model):
 				'n': self.get_enrolment_preference(date),
 				'updated_at': None,
 			}
-
-	def get_balance(self) -> Decimal:
-		return sum([-debitor.expense.unit_price * debitor.amount for debitor in self.debitor_set.all()] +
-		           [expense.total_amount for expense in self.paid_expenses.all()]) + self.start_balance
