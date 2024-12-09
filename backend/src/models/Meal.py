@@ -14,7 +14,7 @@ class Meal(models.Model):
 	cook = models.ForeignKey(Inhabitant, on_delete=models.CASCADE, related_name='cooked_meals')
 	expense = models.OneToOneField(Expense, on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
-	description = models.CharField(max_length=25, blank=True)
+	description = models.CharField(max_length=100, blank=True)
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)

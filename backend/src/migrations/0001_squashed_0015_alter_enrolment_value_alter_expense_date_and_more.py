@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='expense',
             name='category',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.RESTRICT, to='src.expensecategory'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='src.expensecategory'),
             preserve_default=False,
         ),
         migrations.AddField(
