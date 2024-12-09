@@ -1,74 +1,39 @@
 <template>
 	<q-page padding>
-		<q-card>
-			<q-card-section>
-				<div class="text-h4">{{ t('inhabitant_occupancy')}}</div>
-			</q-card-section>
-			<q-card-section>
-				<apexchart
-					type="rangeBar"
-					:series="series"
-					:options="chartOptions"
-				/>
-			</q-card-section>
-		</q-card>
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<OccupancyChart/>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<AgeChart/>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<MealCostCard/>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<MealChart/>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<EnrolmentChart/>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<MealStatsCard/>
+			</div>
+		</div>
 	</q-page>
 </template>
 
 <script setup lang="ts">
-import {date} from 'quasar'
-import {useInhabitantsStore} from 'stores/inhabitants'
-import {onMounted, computed} from 'vue'
-import {useI18n} from 'vue-i18n';
-
-const inhabitantsStore = useInhabitantsStore()
-const {t} = useI18n()
-
-
-const series = computed(() => [
-	{
-		data: inhabitantsStore.inhabitants.map(inhabitant => {
-			return {
-				x: inhabitant.nickname,
-				y: [
-					new Date(inhabitant.date_entrance).getTime(),
-					inhabitant.date_leave? new Date(inhabitant.date_leave).getTime() : new Date().getTime(),
-				],
-			}
-		}),
-	}
-])
-
-const chartOptions = {
-	chart: {
-		type: 'rangeBar',
-		animations: {
-			enabled: false,
-		},
-		toolbar: {
-			show: false,
-		},
-		zoom: {
-			enabled: false,
-		}
-	},
-	dataLabels: {
-		enabled: true,
-		formatter: (val: Date[]) => {
-			return date.getDateDiff(val[1], val[0], 'months') + t(' months')
-		}
-	},
-	plotOptions: {
-		bar: {
-			horizontal: true
-		}
-	},
-	xaxis: {
-		type: 'datetime'
-	},
-}
-
-onMounted(() => {
-	inhabitantsStore.fetch()
-})
+import OccupancyChart from 'components/stats/OccupancyChart.vue'
+import MealCostCard from 'components/stats/MealCostCard.vue'
+import MealChart from 'components/stats/MealChart.vue'
+import AgeChart from 'components/stats/AgeChart.vue'
+import EnrolmentChart from 'components/stats/EnrolmentChart.vue'
+import MealStatsCard from 'components/stats/MealStatsCard.vue'
 </script>
+
+<style scoped>
+.q-card {
+	margin: 5px;
+}
+</style>

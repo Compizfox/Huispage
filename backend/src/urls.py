@@ -32,6 +32,11 @@ urlpatterns = [
 	path('api/dailies/<int:year>/<int:week>/', DailiesView.as_view()),
 	path('api/admin/expensesimport/', ExpenseImportView.as_view()),
 	path('api/balance/', get_balance),
+	path('api/stats/meal_cost', get_mean_meal_cost),
+	path('api/stats/monthly_meal_cost', get_monthly_meal_cost),
+	path('api/stats/meal_stats', get_meal_stats),
+	path('api/stats/monthly_meal_stats', get_monthly_meal_stats),
+	path('api/stats/inhabitant_dob_stats', get_inhabitant_dob_stats),
 	path('api/settings/', get_settings),
 
 	path('api/inhabitants/', InhabitantList.as_view()),
