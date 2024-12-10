@@ -19,18 +19,31 @@ import {useAuthStore} from 'stores/auth'
 import {useInhabitantsStore} from 'stores/inhabitants'
 import {useSettingsStore} from 'stores/settings'
 
+interface DataObject {
+	yearmonth: string,
+	meal_count: number,
+	enrolment_count: number,
+	ratio: number,
+}
+
+const {t} = useI18n()
+
 const authStore = useAuthStore()
 const inhabitantsStore = useInhabitantsStore()
 const settingsStore = useSettingsStore()
-const {t} = useI18n()
 
-const data = ref<[string, [string, number][]][]>([])
+const data = ref<[string, DataObject[]][]>([])
 
 const series = computed(() =>
 	data.value.map(([k, v]) => {
 		return {
-			name: inhabitantsStore.inhabitants.find(x => x.id === Number(k))?.nickname,
-			data: v
+			name: inhabitantsStore.inhabitants.find(inhabitant => inhabitant.id === Number(k))?.nickname,
+			data: v.map(x => {
+				return {
+					x: x.yearmonth,
+					y: x.meal_count,
+				}
+			})
 		}
 	})
 )
@@ -75,7 +88,7 @@ async function fetch() {
 	})
 
 	// Convert object to array
-	data.value = Object.entries(response?.data['meal_counts'])
+	data.value = Object.entries(response?.data)
 
 	if (!settingsStore.showAllInhabitants) {
 		// Filter out non-current inhabitants
@@ -83,7 +96,6 @@ async function fetch() {
 			inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === Number(k))
 		)
 	}
-
 }
 
 onMounted(() => {

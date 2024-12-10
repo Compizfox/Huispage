@@ -108,64 +108,43 @@ def get_monthly_meal_stats(_) -> Response:
 	"""
 	inhabitant_ids = Inhabitant.objects.values_list('pk', flat=True)
 
-	def get_meal_count(inhabitant_id: int):
+	def get_for_inhabitant(inhabitant_id: int):
 		with connection.cursor() as cursor:
 			cursor.execute("""
 				WITH RECURSIVE months AS (
-				    SELECT DATE_FORMAT(MIN(created_at), '%%Y-%%m-01') AS month_start
-				    FROM src_meal
+				    SELECT DATE_FORMAT(MIN(date), '%%Y-%%m-01') AS month_start
+				    FROM src_expense
 				    UNION ALL
 				    SELECT DATE_ADD(month_start, INTERVAL 1 MONTH)
 				    FROM months
 				    WHERE month_start < DATE_FORMAT(CURRENT_DATE, '%%Y-%%m-01')
 				)
-				SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth, COUNT(t.id) AS row_count
-				FROM months m
-				LEFT JOIN src_expense t
-					ON DATE_FORMAT(t.date, '%%Y-%%m') = DATE_FORMAT(m.month_start, '%%Y-%%m')
-					AND t.category_id = %s
-					AND t.creditor_id = %s
-				GROUP BY m.month_start
-				ORDER BY m.month_start;
-				""", (meal_category, inhabitant_id))
-			# Fetch and convert tuple of (date, count) to dict of {date: count}
-			return cursor.fetchall()
+				SELECT ex.yearmonth, meal_count, enrolment_count, meal_count / enrolment_count as ratio
+				FROM (
+				    SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth, COUNT(t.id) AS meal_count
+				    FROM months m
+				    LEFT JOIN src_expense t
+				        ON DATE_FORMAT(t.date, '%%Y-%%m') = DATE_FORMAT(m.month_start, '%%Y-%%m')
+				        AND t.category_id = %s
+				        AND t.creditor_id = %s
+				    GROUP BY m.month_start) ex
+				JOIN (
+				    SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth,  IFNULL(SUM(t.n), 0) AS enrolment_count
+				    FROM months m
+				    LEFT JOIN (src_enrolment t
+				        JOIN src_meal meal
+				            ON meal.date = t.date)
+				        ON DATE_FORMAT(t.date, '%%Y-%%m') = DATE_FORMAT(m.month_start, '%%Y-%%m')
+				        AND t.inhabitant_id = %s
+				    GROUP BY m.month_start) en
+				    ON ex.yearmonth = en.yearmonth;
+					""", (meal_category, inhabitant_id, inhabitant_id))
 
-	def get_enrolment_count(inhabitant_id: int):
-		with connection.cursor() as cursor:
-			cursor.execute("""
-				WITH RECURSIVE months AS (
-				    SELECT DATE_FORMAT(MIN(created_at), '%%Y-%%m-01') AS month_start
-				    FROM src_meal
-				    UNION ALL
-				    SELECT DATE_ADD(month_start, INTERVAL 1 MONTH)
-				    FROM months
-				    WHERE month_start < DATE_FORMAT(CURRENT_DATE, '%%Y-%%m-01')
-				)
-				SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth,  IFNULL(SUM(t.n), 0) AS row_count
-				FROM months m
-				LEFT JOIN (src_enrolment t
-						JOIN src_meal meal
-						ON meal.date = t.date)
-					ON DATE_FORMAT(t.date, '%%Y-%%m') = DATE_FORMAT(m.month_start, '%%Y-%%m')
-				AND t.inhabitant_id = %s
-				GROUP BY m.month_start
-				ORDER BY m.month_start;
-				""", (inhabitant_id,))
-			# Fetch and convert tuple of (date, count) to dict of {date: count}
-			return cursor.fetchall()
+			columns = [col[0] for col in cursor.description]
+			rows = cursor.fetchall()
+			return [dict(zip(columns, row)) for row in rows]
 
-	meal_counts = {id: get_meal_count(id) for id in inhabitant_ids}
-	enrolment_counts = {id: get_enrolment_count(id) for id in inhabitant_ids}
-	meals_per_enrolment = {id: [(date, None if enrolment_count == 0 else meal_count/enrolment_count) for
-	                            (date, meal_count), (date, enrolment_count)
-	                            in zip(meal_counts[id], enrolment_counts[id])] for id in inhabitant_ids}
-
-	return Response({
-		'meal_counts'        : meal_counts,
-		'enrolment_counts'   : enrolment_counts,
-		'meals_per_enrolment': meals_per_enrolment,
-	})
+	return Response({id: get_for_inhabitant(id) for id in inhabitant_ids})
 
 
 @api_view(['GET'])
@@ -176,22 +155,22 @@ def get_inhabitant_dob_stats(_) -> Response:
 	with connection.cursor() as cursor:
 		cursor.execute("""
 			WITH RECURSIVE MonthGenerator AS (
-			   SELECT DATE_FORMAT(MIN(date_entrance), \'%Y-%m-01\') AS month
+			   SELECT DATE_FORMAT(MIN(date_entrance), '%Y-%m-01') AS month
 			   FROM src_inhabitant
 			   UNION ALL
 			   SELECT DATE_ADD(month, INTERVAL 1 MONTH)
 			   FROM MonthGenerator
-			   WHERE month < (SELECT MAX(COALESCE(DATE_FORMAT(date_leave, \'%Y-%m-01\'), DATE_FORMAT(CURDATE(), \'%Y-%m-01\'))) FROM src_inhabitant)
+			   WHERE month < (SELECT MAX(COALESCE(DATE_FORMAT(date_leave, '%Y-%m-01'), DATE_FORMAT(CURDATE(), '%Y-%m-01'))) FROM src_inhabitant)
 			)
 			SELECT
-			   DATE_FORMAT(mg.month, \'%Y-%m\') AS yearmonth,
+			   DATE_FORMAT(mg.month, '%Y-%m') AS yearmonth,
 			   AVG(TIMESTAMPDIFF(DAY, p.date_of_birth, mg.month) / 365.25) AS avg_age,
 			   MIN(TIMESTAMPDIFF(DAY, p.date_of_birth, mg.month) / 365.25) AS min_age,
 			   MAX(TIMESTAMPDIFF(DAY, p.date_of_birth, mg.month) / 365.25) AS max_age
 			FROM
 			   MonthGenerator mg
 			JOIN src_inhabitant p
-			   ON mg.month BETWEEN DATE_FORMAT(p.date_entrance, \'%Y-%m-01\') AND COALESCE(DATE_FORMAT(p.date_leave, \'%Y-%m-01\'), mg.month)
+			   ON mg.month BETWEEN DATE_FORMAT(p.date_entrance, '%Y-%m-01') AND COALESCE(DATE_FORMAT(p.date_leave, '%Y-%m-01'), mg.month)
 			GROUP BY mg.month
 			ORDER BY mg.month;
 			""")
