@@ -20,7 +20,12 @@ const {t} = useI18n()
 const data = ref<[string, [string, number][]][]>([])
 
 const series = computed(() =>
-	data.value.map(([k, v]) => {
+	data.value
+		// Filter out non-current inhabitants
+		.filter(([k, v]) =>
+			settingsStore.showAllInhabitants || inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === Number(k))
+		)
+		.map(([k, v]) => {
 		return {
 			name: inhabitantsStore.inhabitants.find(x => x.id === Number(k))?.nickname,
 			data: v
@@ -76,15 +81,7 @@ async function fetch() {
 	})
 
 	// Convert object to array
-	data.value = Object.entries(response?.data)
-
-	if (!settingsStore.showAllInhabitants) {
-		// Filter out non-current inhabitants
-		data.value = data.value.filter(([k, v]) =>
-			inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === Number(k))
-		)
-	}
-
+	data.value = response?.data
 }
 
 onMounted(() => {

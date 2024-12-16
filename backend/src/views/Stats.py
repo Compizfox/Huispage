@@ -1,10 +1,13 @@
 from django.db import connection
+from django.db.models import F
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from ..models import Inhabitant, Debitor
 
 meal_category: int = 1
+
+inhabitant_ids = Inhabitant.objects.order_by(F('date_leave').desc(nulls_first=True), '-date_entrance').values_list('pk', flat=True)
 
 
 @api_view(['GET'])
@@ -36,8 +39,6 @@ def get_monthly_meal_cost(_) -> Response:
 	"""
 	Get monthly meal cost for each inhabitant
 	"""
-	inhabitant_ids = Inhabitant.objects.values_list('pk', flat=True)
-
 	def get_for_inhabitant(inhabitant_id: int):
 		with connection.cursor() as cursor:
 			cursor.execute("""
@@ -66,7 +67,7 @@ def get_monthly_meal_cost(_) -> Response:
 
 			return cursor.fetchall()
 
-	return Response({id: get_for_inhabitant(id) for id in inhabitant_ids})
+	return Response([(id, get_for_inhabitant(id)) for id in inhabitant_ids])
 
 
 @api_view(['GET'])
@@ -106,8 +107,6 @@ def get_monthly_meal_stats(_) -> Response:
 	"""
 	Get monthly meal count, enrolment count, and the ratio per inhabitant
 	"""
-	inhabitant_ids = Inhabitant.objects.values_list('pk', flat=True)
-
 	def get_for_inhabitant(inhabitant_id: int):
 		with connection.cursor() as cursor:
 			cursor.execute("""
@@ -144,7 +143,7 @@ def get_monthly_meal_stats(_) -> Response:
 			rows = cursor.fetchall()
 			return [dict(zip(columns, row)) for row in rows]
 
-	return Response({id: get_for_inhabitant(id) for id in inhabitant_ids})
+	return Response([(id, get_for_inhabitant(id)) for id in inhabitant_ids])
 
 
 @api_view(['GET'])

@@ -1,5 +1,9 @@
 <template>
 	<q-page padding>
+		<q-checkbox
+			v-model="settingsStore.showAllInhabitants"
+			:label="t('show_all_inhabitants')"
+		/>
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-xl-4">
 				<OccupancyChart/>
@@ -30,6 +34,12 @@ import MealChart from 'components/stats/MealChart.vue'
 import AgeChart from 'components/stats/AgeChart.vue'
 import EnrolmentChart from 'components/stats/EnrolmentChart.vue'
 import MealStatsCard from 'components/stats/MealStatsCard.vue'
+
+import {useI18n} from 'vue-i18n'
+import {useSettingsStore} from 'stores/settings'
+
+const {t} = useI18n()
+const settingsStore = useSettingsStore()
 </script>
 
 <style scoped>

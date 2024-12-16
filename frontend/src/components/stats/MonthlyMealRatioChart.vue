@@ -28,7 +28,12 @@ const settingsStore = useSettingsStore()
 const data = ref<[string, DataObject[]][]>([])
 
 const series = computed(() =>
-	data.value.map(([k, v]) => {
+	data.value
+		// Filter out non-current inhabitants
+		.filter(([k, v]) =>
+			settingsStore.showAllInhabitants || inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === Number(k))
+		)
+		.map(([k, v]) => {
 		return {
 			name: inhabitantsStore.inhabitants.find(inhabitant => inhabitant.id === Number(k))?.nickname,
 			data: v.map(x => {
@@ -86,14 +91,7 @@ async function fetch() {
 	})
 
 	// Convert object to array
-	data.value = Object.entries(response?.data)
-
-	if (!settingsStore.showAllInhabitants) {
-		// Filter out non-current inhabitants
-		data.value = data.value.filter(([k, v]) =>
-			inhabitantsStore.getCurrentInhabitants.some(inhabitant => inhabitant.id === Number(k))
-		)
-	}
+	data.value = response?.data
 }
 
 onMounted(() => {
