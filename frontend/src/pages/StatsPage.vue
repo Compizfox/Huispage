@@ -23,6 +23,9 @@
 			<div class="col-xs-12 col-sm-6 col-xl-4">
 				<MealStatsCard/>
 			</div>
+			<div class="col-xs-12 col-sm-6 col-xl-4">
+				<ExpenseChart/>
+			</div>
 		</div>
 	</q-page>
 </template>
@@ -34,6 +37,7 @@ import MealChart from 'components/stats/MealChart.vue'
 import AgeChart from 'components/stats/AgeChart.vue'
 import EnrolmentChart from 'components/stats/EnrolmentChart.vue'
 import MealStatsCard from 'components/stats/MealStatsCard.vue'
+import ExpenseChart from 'components/stats/ExpenseChart.vue'
 
 import {useI18n} from 'vue-i18n'
 import {useSettingsStore} from 'stores/settings'

@@ -64,6 +64,8 @@ export default {
 		'number_cooking_sessions_per_month': 'Number of cooking sessions per month',
 		'number_enrolments_per_month': 'Number of joined meals per month',
 		'monthly': 'Monthly',
+		'expense_stats': 'Expense stats',
+		'expense_cost_per_month': 'Expense cost per month',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -129,5 +131,7 @@ export default {
 		'number_cooking_sessions_per_month': 'Aantal kookbeurten per maand',
 		'number_enrolments_per_month': 'Aantal keer mee-eten per maand',
 		'monthly': 'Maandelijks',
+		'expense_stats': 'Uitgavestatistieken',
+		'expense_cost_per_month': 'Uitgaven per maand',
 	},
 }

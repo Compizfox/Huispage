@@ -177,3 +177,34 @@ def get_inhabitant_dob_stats(_) -> Response:
 		rows = cursor.fetchall()
 
 	return Response(dict(zip(columns, row)) for row in rows)
+
+
+@api_view(['GET'])
+def get_expense_stats(_, category_id: int) -> Response:
+	"""
+	Get monthly inhabitant age stats
+	"""
+	def get_for_inhabitant(inhabitant_id: int):
+		with connection.cursor() as cursor:
+			cursor.execute("""
+				WITH RECURSIVE MonthGenerator AS (
+					SELECT DATE_FORMAT(MIN(date), '%%Y-%%m-01') AS month
+					FROM src_expense
+					UNION ALL
+					SELECT DATE_ADD(month, INTERVAL 1 MONTH)
+					FROM MonthGenerator
+					WHERE month < DATE_FORMAT(CURRENT_DATE, '%%Y-%%m-01')
+				)
+				SELECT
+					DATE_FORMAT(mg.month, '%%Y-%%m') AS yearmonth,
+					SUM(total_amount)
+				FROM MonthGenerator mg
+				LEFT JOIN src_expense
+					ON DATE_FORMAT(date, '%%Y-%%m') = DATE_FORMAT(mg.month, '%%Y-%%m')
+					AND category_id = %s
+					AND creditor_id = %s
+				GROUP BY mg.month;
+				""", (category_id, inhabitant_id))
+			return cursor.fetchall()
+
+	return Response([(id, get_for_inhabitant(id)) for id in inhabitant_ids])
