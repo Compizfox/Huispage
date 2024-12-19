@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', {
 			try {
 				return await api.request(config)
 			} catch (e) {
-				if (axios.isAxiosError(e) && e.response?.status === 403) {
+				if (axios.isAxiosError(e) && e.response?.status === 401) {
 					await this.logout()
 				} else {
 					throw e
