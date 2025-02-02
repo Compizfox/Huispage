@@ -35,7 +35,8 @@ class Inhabitant(models.Model):
 		"""
 		Return true if currently inhabiting.
 		"""
-		return self.date_leave is None and self.date_entrance < timezone.now()
+		today = timezone.now().date()
+		return (self.date_leave is None or today < self.date_leave) and self.date_entrance < today
 
 	def __str__(self) -> str:
 		return self.user.__str__()
@@ -48,7 +49,7 @@ class Inhabitant(models.Model):
 
 	def get_enrolment_preference(self, date: datetime.date) -> int:
 		#                                JSON field is indexed by strings
-		return self.enrolment_preference[str(date.weekday())] if date >= self.date_entrance else 0
+		return self.enrolment_preference[str(date.weekday())] if self.is_active() else 0
 
 	def get_enrolment_or_preference(self, date: datetime.date) -> Dict:
 		enrolment = self.enrolments.filter(date=date).first()
