@@ -110,7 +110,7 @@ async function onSubmit() {
 
 			dialog.value.hide()
 		} catch (e) {
-			if (axios.isAxiosError(e) && e.response?.data.includes('double_meal_expense')) {
+			if (axios.isAxiosError(e) && 'non_field_errors' in e.response?.data) {
 				$q.notify({
 					type: 'negative',
 					message: t('double_meal_expense'),

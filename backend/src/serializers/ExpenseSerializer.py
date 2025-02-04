@@ -18,12 +18,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 	def create(self, validated_data: dict) -> Expense:
 		# Handle creation for relation: create debitors
 		debitors_data = validated_data.pop('get_debitors')
-		expense = Expense(**validated_data)
-		try:
-			expense.validate_constraints()
-		except ValidationError:
-			raise serializers.ValidationError('double_meal_expense')
-		expense.save()
+		expense = Expense.objects.create(**validated_data)
 
 		for debitor_data in debitors_data:
 			if debitor_data['amount'] != 0:
@@ -47,12 +42,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 		for attr, value in validated_data.items():
 			setattr(instance, attr, value)
 
-		try:
-			instance.validate_constraints()
-		except ValidationError:
-			raise serializers.ValidationError('double_meal_expense')
 		instance.save()
-
 		return instance
 
 	def validate(self, data):
