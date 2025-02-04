@@ -66,6 +66,8 @@ export default {
 		'monthly': 'Monthly',
 		'expense_stats': 'Expense stats',
 		'expense_cost_per_month': 'Expense cost per month',
+		'incorrect_credentials': 'Incorrect credentials',
+		'inactive_user': 'Inactive user',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -133,5 +135,7 @@ export default {
 		'monthly': 'Maandelijks',
 		'expense_stats': 'Uitgavestatistieken',
 		'expense_cost_per_month': 'Uitgaven per maand',
+		'incorrect_credentials': 'Logingegevens incorrect',
+		'inactive_user': 'Gebruiker Inactief',
 	},
 }

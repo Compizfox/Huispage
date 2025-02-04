@@ -3,7 +3,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 from rest_framework.permissions import AllowAny
 
 from ..serializers import InhabitantSerializer
@@ -36,7 +36,10 @@ def login(request: Request) -> Response:
 	user = authenticate(username=username, password=password)
 
 	if user is None:
-		raise AuthenticationFailed(detail='Invalid credentials')
+		raise AuthenticationFailed('invalid_credentials')
+
+	if not user.inhabitant.is_active():
+		raise PermissionDenied('inactive')
 
 	auth_login(request, user)
 

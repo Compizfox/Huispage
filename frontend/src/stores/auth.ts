@@ -11,20 +11,12 @@ export const useAuthStore = defineStore('auth', {
 	}),
 	actions: {
 		async login(username: string, password: string) {
-			try {
-				const response = await api.post('auth/login', {username, password})
-				this.inhabitant = response.data
-				localStorage.setItem('inhabitant', JSON.stringify(this.inhabitant))
+			const response = await api.post('auth/login', {username, password})
+			this.inhabitant = response.data
+			localStorage.setItem('inhabitant', JSON.stringify(this.inhabitant))
 
-				// redirect to previous url or default to home page
-				this.router.push(this.returnUrl || '/')
-			} catch (e) {
-				if (axios.isAxiosError(e) && e.response?.status === 401) {
-					throw new Error('Wrong credentials')
-				} else {
-					throw e
-				}
-			}
+			// redirect to previous url or default to home page
+			this.router.push(this.returnUrl || '/')
 		},
 		async logout() {
 			try {

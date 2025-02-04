@@ -54,7 +54,10 @@ import {ref, onMounted} from 'vue'
 import {useAuthStore} from 'stores/auth'
 import {useQuasar} from 'quasar'
 import {api} from 'boot/axios'
+import axios from 'axios'
+import {useI18n} from 'vue-i18n'
 
+const {t} = useI18n()
 const $q = useQuasar()
 const authStore = useAuthStore();
 
@@ -62,10 +65,20 @@ const username = ref('')
 const password = ref('')
 
 function onSubmit() {
-	authStore.login(username.value, password.value).catch(e => $q.notify({
-		type: 'negative',
-		message: e.message,
-	}))
+	authStore.login(username.value, password.value)
+		.catch(e => {
+			if (axios.isAxiosError(e) && e.response?.status === 401) {
+				$q.notify({
+					type: 'negative',
+					message: t('incorrect_credentials'),
+				})
+			} else if (axios.isAxiosError(e) && e.response?.data['detail'] == 'inactive') {
+				$q.notify({
+					type: 'negative',
+					message: t('inactive_user'),
+				})
+			}
+		})
 }
 
 onMounted(() => {
