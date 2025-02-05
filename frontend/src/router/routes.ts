@@ -77,6 +77,11 @@ const routes: RouteRecordRaw[] = [
 					}
 				]
 			},
+			{
+				path: 'user-preferences',
+				name: 'userPreferences',
+				component: () => import('pages/UserPreferences.vue')
+			},
 		],
 	},
 

@@ -52,6 +52,12 @@
 					padding="none"
 				>
 					<q-list>
+						<q-item clickable :to="{ name: 'userPreferences' }">
+							<q-item-section avatar>
+								<q-icon color="primary" name="manage_accounts"/>
+							</q-item-section>
+							<q-item-section>{{ t('user_preferences') }}</q-item-section>
+						</q-item>
 						<q-item clickable @click="authStore.logout">
 							<q-item-section avatar>
 								<q-icon color="primary" name="logout"/>
