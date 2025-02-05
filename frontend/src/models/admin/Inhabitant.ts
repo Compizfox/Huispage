@@ -9,7 +9,7 @@ export interface Inhabitant {
 	language: string,
 	date_of_birth: string,
 	date_entrance: string,
-	date_leave: string | null,
+	date_leave: string,
 	is_superuser: boolean,
 	enrolment_preference: {
 		0: number,

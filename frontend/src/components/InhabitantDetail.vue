@@ -2,9 +2,13 @@
 	<NestedCardDialog ref="dialog" width="1000px">
 		<template #title>
 			<q-icon name="person"/>
-			{{ t('new_inhabitant') }}
+			{{ inhabitant.nickname }}
 		</template>
-		<InhabitantForm ref="inhabitant_form" v-model="inhabitant" @onSubmit="onSubmit"/>
+		<InhabitantForm
+			ref="form"
+			v-model="inhabitant"
+			:password-required="false"
+		/>
 		<q-card-actions align="right">
 			<q-btn
 				flat
@@ -28,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, Ref} from 'vue'
+import {ref, Ref} from 'vue'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
-import InhabitantForm from 'components/InhabitantForm.vue'
+import InhabitantForm from 'components/InhabitantForm/InhabitantForm.vue'
 import {useAuthStore} from 'stores/auth';
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
@@ -44,7 +48,7 @@ const authStore = useAuthStore()
 const url = 'admin/inhabitants/' + route.params.id + '/'
 
 const inhabitant: Ref<Inhabitant> = ref({enrolment_preference: {}} as Inhabitant)
-const inhabitant_form = ref()
+const form = ref()
 const dialog = ref()
 
 fetch()
@@ -59,7 +63,7 @@ async function fetch() {
 }
 
 async function onSubmit() {
-	const valid = await inhabitant_form.value.validate()
+	const valid = await form.value.validate()
 	if (!valid) return
 
 	await authStore.request({

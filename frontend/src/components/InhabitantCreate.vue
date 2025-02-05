@@ -4,7 +4,11 @@
 			<q-icon name="person"/>
 			{{ t('new_inhabitant') }}
 		</template>
-		<InhabitantForm ref="form" v-model="inhabitant" :password-required="true" @onSubmit="onSubmit"/>
+		<InhabitantForm
+			ref="form"
+			v-model="inhabitant"
+			:password-required="true"
+		/>
 		<q-card-actions align="right">
 			<q-btn
 				flat
@@ -22,7 +26,7 @@
 import {ref, Ref} from 'vue'
 import {date} from 'quasar'
 import NestedCardDialog from 'components/NestedCardDialog.vue'
-import InhabitantForm from 'components/InhabitantForm.vue'
+import InhabitantForm from 'components/InhabitantForm/InhabitantForm.vue'
 import {useAuthStore} from 'stores/auth';
 import {useI18n} from 'vue-i18n'
 
