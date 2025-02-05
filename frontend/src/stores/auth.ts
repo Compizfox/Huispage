@@ -26,6 +26,15 @@ export const useAuthStore = defineStore('auth', {
 			localStorage.removeItem('inhabitant')
 			this.router.push({name: 'login'})
 		},
+		async refresh() {
+			const response = await this.request({
+				url: 'admin/inhabitants/' + this.inhabitant!.id,
+				method: 'get',
+			})
+
+			this.inhabitant = response?.data
+			localStorage.setItem('inhabitant', JSON.stringify(this.inhabitant))
+		},
 		async request(config: AxiosRequestConfig): Promise<AxiosResponse | void> {
 			try {
 				return await api.request(config)

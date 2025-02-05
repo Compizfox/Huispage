@@ -59,7 +59,7 @@ import Preferences from 'components/InhabitantForm/Preferences.vue'
 
 const inhabitant: Ref<Inhabitant> = ref({} as Inhabitant)
 
-const {t} = useI18n()
+const {t, locale} = useI18n({useScope: 'global'})
 const $q = useQuasar()
 const authStore = useAuthStore()
 
@@ -98,6 +98,9 @@ async function onSubmit() {
 	})
 
 	await fetch()
+
+	await authStore.refresh()
+	locale.value = authStore.inhabitant!.language
 }
 </script>
 
