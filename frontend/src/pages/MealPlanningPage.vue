@@ -35,6 +35,12 @@
 					>
 						<q-tooltip>{{ t('to_cook') }}</q-tooltip>
 					</q-btn>
+					<q-badge
+						v-if="props.row.meal"
+						color="accent"
+					>
+						{{ Object.values(props.row.enrolments).reduce((a, b) => a + b.n, 0) }}
+					</q-badge>
 				</q-td>
 			</template>
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
@@ -81,9 +87,18 @@
 						flat
 						v-if="props.row.meal?.cook === props.col.name"
 					>
-						<q-badge color="accent" floating>
-							{{ Object.values(props.row.enrolments).reduce((a, b) => a + b.n, 0) }}
-						</q-badge>
+						<q-badge
+							v-if="!props.row.meal.expense"
+							color="warning"
+							floating
+							rounded
+						/>
+						<q-badge
+							v-if="props.row.meal.expense"
+							color="positive"
+							floating
+							rounded
+						/>
 						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
 					</q-btn>
 				</q-td>
