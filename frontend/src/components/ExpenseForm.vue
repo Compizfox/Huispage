@@ -122,12 +122,13 @@ function disable(inhabitant: number) {
 	}
 }
 
+const dateRegex = helpers.regex(/^\d{4}-([0][1-9]|1[0-2])-([0][1-9]|[1-2]\d|3[01])$/)
 
 const validations = {
-	category: { required, integer },
-	creditor_id: {required, integer },
-	description: { required },
-	date: { required },
+	category: {required, integer},
+	creditor_id: {required, integer},
+	description: {required},
+	date: {required, dateRegex},
 	total_amount: {
 		required,
 		numeric,
@@ -135,14 +136,14 @@ const validations = {
 	},
 	debitors: {
 		$each: helpers.forEach({
-			inhabitant: { required, integer },
+			inhabitant: {required, integer},
 			amount: {
 				numeric,
 				minValueValue: minValue(0)
 			}
 		}),
-	debitorSum: ((debitors: Expense['debitors']) =>
-		debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur) > 0)
+		debitorSum: ((debitors: Expense['debitors']) =>
+			debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur) > 0)
 	}
 }
 
