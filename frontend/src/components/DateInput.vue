@@ -15,6 +15,7 @@
 						@update:model-value="$refs.datepickerProxy.hide()"
 						minimal
 						today-btn
+						mask="YYYY-MM-DD"
 					/>
 				</q-popup-proxy>
 			</q-icon>
