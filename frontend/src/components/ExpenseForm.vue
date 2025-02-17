@@ -88,6 +88,14 @@
 					/>
 				</div>
 			</q-field>
+
+			<q-banner
+				v-if="showCookWarning"
+				rounded
+				class="bg-warning"
+			>
+				{{ t('not_cook_warning') }}
+			</q-banner>
 		</q-card-section>
 	</q-form>
 </template>
@@ -101,6 +109,7 @@ import {useI18n} from 'vue-i18n'
 import DateInput from 'components/DateInput.vue'
 import {useVuelidate} from '@vuelidate/core'
 import {required, numeric, integer, minValue, helpers} from '@vuelidate/validators'
+import {computed, ref, watch} from 'vue'
 
 const {t} = useI18n()
 const expenseCategoriesStore = useExpenseCategoriesStore()
@@ -121,6 +130,30 @@ function disable(inhabitant: number) {
 		return false
 	}
 }
+
+const cook = ref<number | null>(null)
+
+const showCookWarning = computed(() => {
+	return expense.value.category === 1 && cook.value != expense.value.creditor_id
+})
+
+async function fetchCook(date: string): Promise<number | null> {
+	const response = await authStore.request({
+		url: 'meals/?date=' + date,
+		method: 'get',
+	})
+
+	return response?.data[0]?.cook ?? null
+}
+
+watch(
+	() => expense.value.date,
+	async (date) => {
+		if (!v.value.date.$error)
+			cook.value = await fetchCook(date)
+	},
+	{immediate: true}
+)
 
 const dateRegex = helpers.regex(/^\d{4}-([0][1-9]|1[0-2])-([0][1-9]|[1-2]\d|3[01])$/)
 
@@ -157,7 +190,3 @@ defineExpose({
 	validate
 })
 </script>
-
-<style scoped>
-
-</style>

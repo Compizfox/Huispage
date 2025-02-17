@@ -76,6 +76,7 @@ export default {
 		'friday': 'Friday',
 		'saturday': 'Saturday',
 		'sunday': 'Sunday',
+		'not_cook_warning': 'Are you sure? The creditor did not cook on that date.',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -153,5 +154,6 @@ export default {
 		'friday': 'Vrijdag',
 		'saturday': 'Zaterdag',
 		'sunday': 'Zondag',
+		'not_cook_warning': 'Zeker weten? De betaler heeft niet gekookt op die datum.',
 	},
 }
