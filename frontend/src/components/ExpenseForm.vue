@@ -146,9 +146,11 @@
 				/>
 			</div>
 
-			<div class="col-12">
+			<div
+				class="col-12"
+				v-if="showCookWarning"
+			>
 				<q-banner
-					v-if="showCookWarning"
 					rounded
 					class="bg-warning"
 				>
