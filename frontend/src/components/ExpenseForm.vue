@@ -60,6 +60,25 @@
 				:disable="readOnly"
 			/>
 
+			<div class="col-12 row justify-end">
+				<q-btn-group>
+					<q-btn
+						color="secondary"
+						no-caps
+						@click="setDebitorAmounts(0)"
+					>
+						{{  t('all_to_0') }}
+					</q-btn>
+					<q-btn
+						color="secondary"
+						no-caps
+						@click="setDebitorAmounts(1)"
+					>
+						{{ t('all_to_1') }}
+					</q-btn>
+				</q-btn-group>
+			</div>
+
 			<q-field
 				class="col-12"
 				outlined
@@ -170,6 +189,13 @@ function disable(inhabitant: number) {
 		return false
 	}
 }
+
+function setDebitorAmounts(n: number) {
+	expense.value.debitors.forEach((debitor) => {
+		debitor.amount = n
+	})
+}
+
 
 const cook = ref<number | null>(null)
 
