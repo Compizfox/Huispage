@@ -77,6 +77,7 @@ export default {
 		'saturday': 'Saturday',
 		'sunday': 'Sunday',
 		'not_cook_warning': 'Are you sure? The creditor did not cook on that date.',
+		'price_per_person': 'Price per person',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -155,5 +156,6 @@ export default {
 		'saturday': 'Zaterdag',
 		'sunday': 'Zondag',
 		'not_cook_warning': 'Zeker weten? De betaler heeft niet gekookt op die datum.',
+		'price_per_person': 'Prijs per persoon',
 	},
 }

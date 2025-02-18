@@ -1,7 +1,8 @@
 <template>
 	<q-form>
-		<q-card-section class="q-gutter-md">
+		<q-card-section class="q-col-gutter-md row">
 			<q-select
+				class="col-12 col-sm-6"
 				outlined
 				emit-value
 				map-options
@@ -27,6 +28,7 @@
 			</q-select>
 
 			<q-select
+				class="col-12 col-sm-6"
 				outlined
 				emit-value
 				map-options
@@ -41,6 +43,7 @@
 			/>
 
 			<q-input
+				class="col-12 col-sm-6"
 				outlined
 				v-model="expense.description"
 				:label="t('description')"
@@ -50,52 +53,89 @@
 			/>
 
 			<DateInput
+				class="col-12 col-sm-6"
 				v-model="expense.date"
 				:label="t('date')"
 				:error="v.date.$error"
 				:disable="readOnly"
 			/>
 
-			<q-input
-				outlined
-				type="number"
-				v-model="expense.total_amount"
-				:label="t('total_price')"
-				mask="#.##"
-				prefix="€"
-				:error="v.total_amount.$error"
-				hide-bottom-space
-				:disable="readOnly"
-			/>
-
 			<q-field
+				class="col-12"
 				outlined
 				:error="v.debitors.$error"
 				hide-bottom-space
+				dense
 			>
-				<div class="row q-gutter-md q-py-sm">
-					<q-input
+				<div class="col column q-gutter-y-sm q-py-sm">
+					<div
 						v-for="debitor in expense.debitors"
 						:key="debitor.inhabitant"
-						outlined
-						type="number"
-						v-model="debitor.amount"
-						:label="inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname"
-						mask="#"
-						dense
-						class="col-2"
-						:disable="disable(debitor.inhabitant)"
-					/>
+						class="row q-col-gutter-x-md items-center"
+					>
+						<q-input
+							class="col-auto"
+							outlined
+							type="number"
+							v-model="debitor.amount"
+							mask="#"
+							:disable="disable(debitor.inhabitant)"
+							size="1"
+						/>
+						<div class="col">
+							{{ inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname }}
+							<q-slider
+								v-model="debitor.amount"
+								markers
+								snap
+								:min="0"
+								:max="5"
+							/>
+						</div>
+					</div>
 				</div>
 			</q-field>
+			<div class="row col-12 items-center justify-between">
+				<q-input
+					outlined
+					type="number"
+					v-model="expense.total_amount"
+					:label="t('total_price')"
+					mask="#.##"
+					prefix="€"
+					:error="v.total_amount.$error"
+					hide-bottom-space
+					:disable="readOnly"
+					class="col"
+				/>
+				<span class="q-pa-sm">/</span>
+				<q-input
+					outlined
+					:model-value="debitorSum"
+					readonly
+					size="2"
+				/>
+				<span class="q-pa-sm">=</span>
+				<q-input
+					outlined
+					stack-label
+					:label="t('price_per_person')"
+					prefix="€"
+					:model-value="(expense.total_amount / debitorSum).toFixed(2)"
+					readonly
+					class="col"
+				/>
+			</div>
 
-			<q-banner
-				v-if="showCookWarning"
-				rounded
-				class="bg-warning"
-			>
-				{{ t('not_cook_warning') }}
-			</q-banner>
+			<div class="col-12">
+				<q-banner
+					v-if="showCookWarning"
+					rounded
+					class="bg-warning"
+				>
+					{{ t('not_cook_warning') }}
+				</q-banner>
+			</div>
 		</q-card-section>
 	</q-form>
 </template>
@@ -154,6 +194,10 @@ watch(
 	},
 	{immediate: true}
 )
+
+const debitorSum = computed(() => {
+	return expense.value.debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur)
+})
 
 const dateRegex = helpers.regex(/^\d{4}-([0][1-9]|1[0-2])-([0][1-9]|[1-2]\d|3[01])$/)
 
