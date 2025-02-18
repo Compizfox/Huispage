@@ -99,7 +99,7 @@
 				<q-input
 					outlined
 					type="number"
-					v-model="expense.total_amount"
+					v-model.number="expense.total_amount"
 					:label="t('total_price')"
 					mask="#.##"
 					prefix="€"
@@ -148,7 +148,7 @@ import {useAuthStore} from 'stores/auth'
 import {useI18n} from 'vue-i18n'
 import DateInput from 'components/DateInput.vue'
 import {useVuelidate} from '@vuelidate/core'
-import {required, numeric, integer, minValue, helpers} from '@vuelidate/validators'
+import {required, numeric, integer, minValue, sameAs, not, helpers} from '@vuelidate/validators'
 import {computed, ref, watch} from 'vue'
 
 const {t} = useI18n()
@@ -201,6 +201,7 @@ const validations = {
 		required,
 		numeric,
 		minValueValue: minValue(0),
+		sameAsRawValue: not(sameAs(0)),
 	},
 	debitors: {
 		$each: helpers.forEach({
