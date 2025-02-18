@@ -46,61 +46,65 @@
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
-					<q-checkbox
-						:model-value="isEnrolled(props.value.value.n)"
-						:disable="props.value.readOnly"
-						checked-icon="chair_alt"
-						@update:model-value="(value, evt) =>
+					<div class="row justify-between">
+						<div>
+							<q-checkbox
+								:model-value="isEnrolled(props.value.value.n)"
+								:disable="props.value.readOnly"
+								checked-icon="chair_alt"
+								@update:model-value="(value, evt) =>
 					onChangeEnrolmentCheckbox(props.rowIndex, props.col.name, props.row.date, value)"
-					>
-						<q-tooltip
-							v-if="props.value.value.updated_at"
-						>
-							{{ date.formatDate(props.value.value.updated_at, 'YYYY-MM-DD H:mm:ss') }}
-						</q-tooltip>
-					</q-checkbox>
+							>
+								<q-tooltip
+									v-if="props.value.value.updated_at"
+								>
+									{{ date.formatDate(props.value.value.updated_at, 'YYYY-MM-DD H:mm:ss') }}
+								</q-tooltip>
+							</q-checkbox>
 
-					<div
-						class="row inline cursor-pointer"
-						v-if="props.value.value.n > 1 || (props.value.value.n > 0 && !props.value.readOnly)"
-					>
-						<q-input
-							type="number"
-							:model-value="getNumGuests(props.value.value.n)"
-							@update:model-value="(value, evt) =>
-						onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
-							:disable="props.value.readOnly"
-							min="0"
-							max="99"
-							dense
-							prefix="+"
-						/>
-						<q-tooltip>
-							{{ t('guests') }}
-						</q-tooltip>
+							<div
+								class="row inline cursor-pointer"
+								v-if="props.value.value.n > 1 || (props.value.value.n > 0 && !props.value.readOnly)"
+							>
+								<q-input
+									type="number"
+									:model-value="getNumGuests(props.value.value.n)"
+									@update:model-value="(value: number) => onChangeNumGuests(props.rowIndex, props.col.name, props.row.date, value)"
+									:disable="props.value.readOnly"
+									min="0"
+									max="99"
+									dense
+									prefix="+"
+								/>
+								<q-tooltip>
+									{{ t('guests') }}
+								</q-tooltip>
+							</div>
+						</div>
+
+						<q-btn
+							:to="{ name: 'mealDetail', params: { id: props.row.meal.id }}"
+							icon="restaurant"
+							no-caps
+							padding="xs"
+							flat
+							v-if="props.row.meal?.cook === props.col.name"
+						>
+							<q-badge
+								v-if="!props.row.meal.expense"
+								color="warning"
+								floating
+								rounded
+							/>
+							<q-badge
+								v-if="props.row.meal.expense"
+								color="positive"
+								floating
+								rounded
+							/>
+							<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
+						</q-btn>
 					</div>
-					<q-btn
-						:to="{ name: 'mealDetail', params: { id: props.row.meal.id }}"
-						icon="restaurant"
-						no-caps
-						padding="xs"
-						flat
-						v-if="props.row.meal?.cook === props.col.name"
-					>
-						<q-badge
-							v-if="!props.row.meal.expense"
-							color="warning"
-							floating
-							rounded
-						/>
-						<q-badge
-							v-if="props.row.meal.expense"
-							color="positive"
-							floating
-							rounded
-						/>
-						<q-tooltip>{{ props.col.label }} {{ t('cooking') }}</q-tooltip>
-					</q-btn>
 				</q-td>
 			</template>
 
