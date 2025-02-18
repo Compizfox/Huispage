@@ -77,7 +77,7 @@
 							class="col-auto"
 							outlined
 							type="number"
-							v-model="debitor.amount"
+							v-model.number="debitor.amount"
 							mask="#"
 							:disable="disable(debitor.inhabitant)"
 							size="1"
