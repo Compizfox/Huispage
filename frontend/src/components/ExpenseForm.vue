@@ -186,15 +186,6 @@ async function fetchCook(date: string): Promise<number | null> {
 	return response?.data[0]?.cook ?? null
 }
 
-watch(
-	() => expense.value.date,
-	async (date) => {
-		if (!v.value.date.$error)
-			cook.value = await fetchCook(date)
-	},
-	{immediate: true}
-)
-
 const debitorSum = computed(() => {
 	return expense.value.debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur)
 })
@@ -225,6 +216,17 @@ const validations = {
 }
 
 const v = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
+
+watch(
+	() => expense.value.date,
+	async (date) => {
+		if (!v.value.date.$error) {
+			cook.value = await fetchCook(date)
+		}
+
+	},
+	{immediate: true}
+)
 
 async function validate() {
 	return await v.value.$validate()
