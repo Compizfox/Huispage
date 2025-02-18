@@ -5,25 +5,25 @@
 			:label="t('show_all_inhabitants')"
 		/>
 		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<OccupancyChart/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<AgeChart/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<MealCostCard/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<MealChart/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<EnrolmentChart/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<MealStatsCard/>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-xl-4">
+			<div class="col-xs-12 col-md-6 col-xl-4">
 				<ExpenseChart/>
 			</div>
 		</div>
