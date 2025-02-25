@@ -199,10 +199,10 @@ function setDebitorAmounts(n: number) {
 }
 
 
-const cook = ref<number | null>(null)
+const cook = ref<number | null | undefined>(undefined)
 
 const showCookWarning = computed(() => {
-	return expense.value.category === 1 && cook.value != expense.value.creditor_id
+	return expense.value.category === 1 && cook.value !== undefined && cook.value != expense.value.creditor_id
 })
 
 async function fetchCook(date: string): Promise<number | null> {
@@ -249,7 +249,8 @@ const v = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
 watch(
 	() => expense.value.date,
 	async (date) => {
-		if (!v.value.date.$error) {
+		v.value.date.$touch()
+		if (!v.value.date.$invalid) {
 			cook.value = await fetchCook(date)
 		}
 
