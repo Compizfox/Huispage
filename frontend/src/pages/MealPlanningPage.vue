@@ -1,5 +1,5 @@
 <template>
-	<q-page padding>
+	<q-page padding class="q-gutter-y-md">
 		<router-view></router-view>
 		<q-table
 			:rows="rows"
@@ -144,6 +144,8 @@
 				/>
 			</template>
 		</q-table>
+
+		<Birthdays/>
 	</q-page>
 </template>
 
@@ -157,6 +159,7 @@ import {onBeforeRouteUpdate} from 'vue-router'
 import {date, useQuasar} from 'quasar'
 
 import type {Day} from 'src/models/Day'
+import Birthdays from 'components/Birthdays.vue'
 
 const {t} = useI18n()
 const $q = useQuasar()

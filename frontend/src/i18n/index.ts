@@ -80,6 +80,7 @@ export default {
 		'price_per_person': 'Price per person',
 		'all_to_0': 'All to 0',
 		'all_to_1': 'All to 1',
+		'upcoming_birthdays': 'Upcoming birthdays',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -161,5 +162,6 @@ export default {
 		'price_per_person': 'Prijs per persoon',
 		'all_to_0': 'Alles naar 0',
 		'all_to_1': 'Alles naar 1',
+		'upcoming_birthdays': 'Aankomende verjaardagen',
 	},
 }
