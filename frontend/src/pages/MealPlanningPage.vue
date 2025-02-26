@@ -46,8 +46,8 @@
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
 				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
-					<div class="row justify-between">
-						<div>
+					<div class="row justify-between items-baseline">
+						<div class="row">
 							<q-checkbox
 								:model-value="isEnrolled(props.value.value.n)"
 								:disable="props.value.readOnly"
@@ -337,7 +337,7 @@ onBeforeRouteUpdate(() => {
 }
 
 #mealPlanning td {
-	vertical-align: middle;
+	vertical-align: baseline;
 }
 
 #mealPlanning input[type="number"] {
