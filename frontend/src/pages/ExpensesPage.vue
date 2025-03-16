@@ -178,6 +178,7 @@ const columns = computed(() => [
 		required: true,
 		label: t('added_at'),
 		sortable: true,
+		sortOrder: 'da',
 		field: (row: Expense) => row.updated_at,
 		format: (val: string) => date.formatDate(val, 'YYYY-MM-DD'),
 	},
@@ -187,6 +188,7 @@ const columns = computed(() => [
 		label: t('date'),
 		align: 'left',
 		sortable: true,
+		sortOrder: 'da',
 		field: (row: Expense) => row.date,
 		format: (val: string) => date.formatDate(val, 'YYYY-MM-DD'),
 	},
@@ -255,7 +257,7 @@ async function fetch() {
 	loading.value = true
 
 	// Fetch expenses
-	let response = authStore.request({
+	authStore.request({
 		url: 'expenses/',
 		method: 'get',
 		params: {
