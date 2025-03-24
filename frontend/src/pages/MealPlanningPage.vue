@@ -45,7 +45,7 @@
 			</template>
 			<template v-for="inhabitantSlot in inhabitantBodyCellSlots" #[inhabitantSlot]="props"
 								:key="inhabitantSlot">
-				<q-td :props="props" :class="(isToday(props.row.date))?'bg-secondary':''">
+				<q-td :props="props" class="td-inhabitant" :class="(isToday(props.row.date))?'bg-secondary':''">
 					<div class="row justify-between items-baseline">
 						<div class="row">
 							<q-checkbox
@@ -336,7 +336,7 @@ onBeforeRouteUpdate(() => {
 	padding: 4px;
 }
 
-#mealPlanning td {
+.td-inhabitant {
 	vertical-align: baseline;
 }
 
