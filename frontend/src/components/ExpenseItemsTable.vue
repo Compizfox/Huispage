@@ -1,58 +1,25 @@
 <template>
-  <q-table
-      :rows="model"
-      :columns="columns"
-	  :rows-per-page-options="[0]"
-	  hide-header
-	  hide-bottom
-  >
-    <template v-slot:body-cell-name="props">
-      <q-td :props="props">
-        <q-input
-            outlined
-            :label="t('description')"
-            hide-bottom-space
-            v-model="props.row.name"
-            dense
-        />
-      </q-td>
-    </template>
-    <template v-slot:body-cell-cost="props">
-      <q-td :props="props">
-        <q-input
-            outlined
-            type="number"
-            v-model.number="props.row.cost"
-            :label="t('price')"
-            mask="#.##"
-            prefix="€"
-            hide-bottom-space
-            dense
-        />
-      </q-td>
-    </template>
-    <template v-slot:body-cell-actions="props">
-		<q-td :props="props">
-			<q-btn
-				icon="close"
-				dense
-				@click="deleteItem(props.row)"
-			/>
-		</q-td>
-    </template>
-  </q-table>
+	<q-table
+		:rows="model"
+		:columns="columns"
+		:rows-per-page-options="[0]"
+		hide-header
+		hide-bottom
+	>
+		<template v-slot:body="props">
+			<ExpenseItemRow v-model="model[props.rowIndex]" @delete="deleteItem(props.rowIndex)"/>
+		</template>
+	</q-table>
 </template>
 
 <script setup lang="ts">
 import {watch} from 'vue'
 import {useI18n} from 'vue-i18n'
+import {useVuelidate} from '@vuelidate/core'
+import ExpenseItemRow from 'components/ExpenseItemRow.vue'
+import type {ExpenseItem} from 'components/ExpenseItemRow.vue'
 
 const {t} = useI18n()
-
-interface ExpenseItem {
-	name: string,
-	cost: number,
-}
 
 const model = defineModel<ExpenseItem[]>({required: true})
 
@@ -74,10 +41,11 @@ const columns = [
 	},
 ]
 
-function deleteItem(item: ExpenseItem) {
+function deleteItem(index: number) {
+	// Don't delete last item
 	if (model.value.length == 1) return
 
-	model.value.splice(model.value.indexOf(item), 1)
+	model.value.splice(index, 1)
 }
 
 watch(
@@ -90,4 +58,6 @@ watch(
 	},
 	{deep: true}
 )
+
+const v = useVuelidate()
 </script>
