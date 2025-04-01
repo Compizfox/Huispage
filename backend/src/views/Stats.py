@@ -17,10 +17,10 @@ def get_mean_meal_cost(_) -> Response:
 	"""
 	with connection.cursor() as cursor:
 		cursor.execute("""
-			SELECT e.creditor_id as inhabitant_id, AVG(e.total_amount) / AVG(shares) AS avg_meal_cost
+			SELECT e.creditor_id as inhabitant_id, SUM(e.total_amount) / SUM(shares) AS avg_meal_cost
 			FROM src_expense as e
 			JOIN (
-			   SELECT SUM(amount) as shares, expense_id
+				SELECT SUM(amount) as shares, expense_id
 				FROM src_debitor
 				GROUP BY expense_id
 			) AS b ON e.id = b.expense_id
@@ -50,7 +50,7 @@ def get_monthly_meal_cost(_) -> Response:
 					FROM months
 					WHERE month_start < DATE_FORMAT(CURRENT_DATE, '%%Y-%%m-01')
 				)
-				SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth, AVG(e.total_amount) / AVG(shares) AS cost
+				SELECT DATE_FORMAT(m.month_start, '%%Y-%%m') AS yearmonth, SUM(e.total_amount) / SUM(shares) AS cost
 				from months m
 				LEFT JOIN (src_expense e
 					JOIN (
