@@ -33,6 +33,7 @@ const series = computed(() => [
 					new Date(inhabitant.date_entrance).getTime(),
 					inhabitant.date_leave ? new Date(inhabitant.date_leave).getTime() : new Date().getTime(),
 				],
+				fillColor: !inhabitant.date_leave ? '#FEB019' : undefined,
 			}
 		}),
 	}
