@@ -19,6 +19,13 @@
 				</router-link>
 			</template>
 
+			<template #body-cell-is_superuser="props">
+				<q-td :props="props">
+					<q-icon v-if="props.value" name="check_box" />
+					<q-icon v-else name="check_box_outline_blank" />
+				</q-td>
+			</template>
+
 			<template #body-cell-edit="props">
 				<q-td :props="props">
 					<router-link :to="{ name: 'inhabitantDetail', params: { id: props.row.id }}">
@@ -87,7 +94,6 @@ const columns = [
 		name: 'is_superuser',
 		label: t('admin'),
 		field: (row: Inhabitant) => row.is_superuser,
-		format: (val: boolean) => val ? '\u2611' : '\u2610',
 	},
 	{
 		name: 'edit',
