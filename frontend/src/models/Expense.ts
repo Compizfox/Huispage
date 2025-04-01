@@ -11,5 +11,9 @@ export interface Expense {
 	debitors: Array<{
 		inhabitant: number,
 		amount: number,
+	}>,
+	items: Array<{
+		name: string,
+		cost: number,
 	}>
 }

@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 
-from ..models import Expense, Inhabitant, Debitor
+from ..models import Expense, Inhabitant, Debitor, ExpenseItem
 from .DebitorSerializer import DebitorSerializer
+from .ExpenseItemSerializer import ExpenseItemSerializer
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -54,3 +55,37 @@ class ExpenseSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError('Sum of debitor shares should be > 0')
 
 		return data
+
+
+class ExpenseSerializerWithItems(ExpenseSerializer):
+	class Meta:
+		model = Expense
+		fields = ('id', 'creditor_id', 'creditor_name', 'debitors', 'category', 'date', 'created_at', 'updated_at',
+		          'total_amount', 'unit_price', 'description', 'items')
+
+	items = ExpenseItemSerializer(many=True)
+
+	def to_internal_value(self, data) -> dict:
+		# Omit fully empty expense items
+		data['items'] = [item for item in data['items'] if not all(not x for x in item.values())]
+
+		return super().to_internal_value(data)
+
+	def create(self, validated_data: dict) -> Expense:
+		items_data = validated_data.pop('items')
+		expense = super().create(validated_data)
+
+		# Create items
+		for item_data in items_data:
+			ExpenseItem.objects.create(expense=expense, **item_data)
+
+		return expense
+
+	def update(self, instance: Expense, validated_data: dict) -> Expense:
+		# Update items
+		for old_item in instance.items.all():
+			old_item.delete()
+		for item_data in validated_data.pop('items'):
+			ExpenseItem.objects.create(expense=instance, **item_data)
+
+		return super().update(instance, validated_data)

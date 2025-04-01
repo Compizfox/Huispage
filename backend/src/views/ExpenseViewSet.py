@@ -10,7 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.conf import settings
 
 from ..models import Expense
-from ..serializers import ExpenseSerializer
+from ..serializers import ExpenseSerializer, ExpenseSerializerWithItems
 
 
 class Pagination(PageNumberPagination):
@@ -35,11 +35,16 @@ class Pagination(PageNumberPagination):
 
 class ExpenseViewSet(viewsets.ModelViewSet):
 	queryset = Expense.objects
-	serializer_class = ExpenseSerializer
 	filter_backends = [DjangoFilterBackend, OrderingFilter]
 	filterset_fields = ['category', 'creditor', 'debitors']
 	ordering = ['-date', '-updated_at']
 	pagination_class = Pagination
+
+	def get_serializer_class(self):
+		if self.action == 'list':
+			# Use serializer without nested items
+			return ExpenseSerializer
+		return ExpenseSerializerWithItems
 
 	def update(self, request: Request, *args, **kwargs) -> Response:
 		if not kwargs.get('partial'):

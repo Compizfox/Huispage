@@ -49,6 +49,9 @@ const expense: Ref<Expense> = ref({
 	category: undefined,
 	total_amount: 0,
 	debitors: [],
+	items: [
+		{name: '', cost: 0},
+	]
 })
 
 const getInhabitants = computed(() =>

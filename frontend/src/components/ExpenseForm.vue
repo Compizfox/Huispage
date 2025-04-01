@@ -125,6 +125,11 @@
 					</div>
 				</div>
 			</q-field>
+
+			<div>
+				<ExpenseItemsTable v-model="expense.items"/>
+			</div>
+
 			<div class="row col-12 items-center justify-between">
 				<q-input
 					outlined
@@ -135,7 +140,7 @@
 					prefix="€"
 					:error="v.total_amount.$error"
 					hide-bottom-space
-					:disable="readOnly"
+					:disable="readOnly || expense.items.length > 1"
 					class="col"
 				/>
 				<span class="q-pa-sm">/</span>
@@ -180,8 +185,9 @@ import {useAuthStore} from 'stores/auth'
 import {useI18n} from 'vue-i18n'
 import DateInput from 'components/DateInput.vue'
 import {useVuelidate} from '@vuelidate/core'
-import {required, numeric, integer, minValue, sameAs, not, helpers} from '@vuelidate/validators'
+import {helpers, integer, minValue, not, numeric, required, sameAs} from '@vuelidate/validators'
 import {computed, ref, watch} from 'vue'
+import ExpenseItemsTable from 'components/ExpenseItemsTable.vue'
 
 const {t} = useI18n()
 const expenseCategoriesStore = useExpenseCategoriesStore()
@@ -209,7 +215,6 @@ function setDebitorAmounts(n: number) {
 	})
 }
 
-
 const cook = ref<number | null | undefined>(undefined)
 
 const showCookWarning = computed(() => {
@@ -227,6 +232,10 @@ async function fetchCook(date: string): Promise<number | null> {
 
 const debitorSum = computed(() => {
 	return expense.value.debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur)
+})
+
+const itemsDefined = computed(() => {
+	return expense.value.items.some((item) => item.name != '' || item.cost != 0)
 })
 
 const dateRegex = helpers.regex(/^\d{4}-([0][1-9]|1[0-2])-([0][1-9]|[1-2]\d|3[01])$/)
@@ -264,9 +273,16 @@ watch(
 		if (!v.value.date.$invalid) {
 			cook.value = await fetchCook(date)
 		}
-
 	},
 	{immediate: true}
+)
+
+watch(
+	() => expense.value.items,
+	() => {
+		expense.value.total_amount = expense.value.items.reduce((n, {cost}) => n + cost, 0)
+	},
+	{deep: true}
 )
 
 async function validate() {
