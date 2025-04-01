@@ -86,30 +86,41 @@
 				hide-bottom-space
 				dense
 			>
-				<div class="col column q-gutter-y-sm q-py-sm">
+				<div
+					class="responsive-grid col q-col-gutter-x-lg q-col-gutter-y-sm q-py-md"
+				>
 					<div
 						v-for="debitor in expense.debitors"
 						:key="debitor.inhabitant"
-						class="row q-col-gutter-x-md items-center"
+						class="row no-wrap q-col-gutter-x-md items-center"
 					>
-						<q-input
-							class="col-auto"
-							outlined
-							type="number"
-							v-model.number="debitor.amount"
-							mask="#"
-							:disable="disable(debitor.inhabitant)"
-							size="1"
-						/>
-						<div class="col">
-							{{ inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname }}
-							<q-slider
-								v-model="debitor.amount"
-								markers
-								snap
-								:min="0"
-								:max="5"
-							/>
+						<div style="flex-grow: 1">
+							<q-chip>
+								{{ inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname }}
+							</q-chip>
+						</div>
+
+						<div>
+							<q-btn-group rounded dense>
+								<q-btn
+									@click="debitor.amount--"
+									icon="remove"
+									padding="6px"
+								/>
+								<q-input
+									borderless
+									type="number"
+									v-model.number="debitor.amount"
+									mask="#"
+									:disable="disable(debitor.inhabitant)"
+									size="1"
+								/>
+								<q-btn
+									@click="debitor.amount++"
+									icon="add"
+									padding="6px"
+								/>
+							</q-btn-group>
 						</div>
 					</div>
 				</div>
@@ -241,7 +252,7 @@ const validations = {
 		}),
 		debitorSum: ((debitors: Expense['debitors']) =>
 			debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur) > 0)
-	}
+	},
 }
 
 const v = useVuelidate(validations, expense, {$lazy: true, $autoDirty: true})
@@ -266,3 +277,13 @@ defineExpose({
 	validate
 })
 </script>
+
+<style scoped lang="scss">
+.responsive-grid {
+	display: grid;
+	justify-content: space-between;
+	@media (min-width: 600px) {
+		grid-template-columns: repeat(2, minmax(max-content, 1fr));
+	}
+}
+</style>
