@@ -38,7 +38,7 @@ def login(request: Request) -> Response:
 	if user is None:
 		raise AuthenticationFailed('invalid_credentials')
 
-	if not user.inhabitant.is_active():
+	if not user.inhabitant.is_active() and not user.is_superuser:
 		raise PermissionDenied('inactive')
 
 	auth_login(request, user)
