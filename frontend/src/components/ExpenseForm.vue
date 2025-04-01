@@ -234,10 +234,6 @@ const debitorSum = computed(() => {
 	return expense.value.debitors.map((debitor) => debitor.amount).reduce((sum, cur) => sum + cur)
 })
 
-const itemsDefined = computed(() => {
-	return expense.value.items.some((item) => item.name != '' || item.cost != 0)
-})
-
 const dateRegex = helpers.regex(/^\d{4}-([0][1-9]|1[0-2])-([0][1-9]|[1-2]\d|3[01])$/)
 
 const validations = {
@@ -279,8 +275,11 @@ watch(
 
 watch(
 	() => expense.value.items,
-	() => {
-		expense.value.total_amount = expense.value.items.reduce((n, {cost}) => n + cost, 0)
+	(items) => {
+		// Compute total amount from sum of items, if defined
+		if (items.some((item) => item.name != '' || item.cost != 0)) {
+			expense.value.total_amount = items.reduce((n, {cost}) => n + cost, 0)
+		}
 	},
 	{deep: true}
 )
