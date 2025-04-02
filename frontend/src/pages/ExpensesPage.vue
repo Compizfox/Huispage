@@ -53,7 +53,7 @@
 			<template #body-cell-edit="props">
 				<q-td :props="props">
 					<router-link :to="{ name: 'expenseDetail', params: { id: props.row.id }}">
-						<q-icon name="edit"/>
+						<q-icon name="open_in_new"/>
 					</router-link>
 				</q-td>
 			</template>
