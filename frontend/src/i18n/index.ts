@@ -82,6 +82,8 @@ export default {
 		'all_to_1': 'All to 1',
 		'upcoming_birthdays': 'Upcoming birthdays',
 		'price': 'Price',
+		'items': 'Items',
+		'debitors': 'Debitors',
 	},
 	'nl': {
 		'tabs.mealPlanning': 'Eetplanning',
@@ -165,5 +167,7 @@ export default {
 		'all_to_1': 'Alles naar 1',
 		'upcoming_birthdays': 'Aankomende verjaardagen',
 		'price': 'Prijs',
+		'items': 'Artikelen',
+		'debitors': 'Meebetalers',
 	},
 }

@@ -2,7 +2,7 @@
 <q-tr no-hover>
 	<q-td>
 		<q-input
-			outlined
+			borderless
 			:label="t('description')"
 			hide-bottom-space
 			v-model="item.name"
@@ -12,7 +12,7 @@
 	</q-td>
 	<q-td>
 		<q-input
-			outlined
+			borderless
 			type="number"
 			v-model.number="item.cost"
 			:label="t('price')"
@@ -20,7 +20,6 @@
 			prefix="€"
 			hide-bottom-space
 			dense
-
 			:error="v.cost.$error"
 		/>
 	</q-td>
@@ -29,6 +28,7 @@
 			icon="close"
 			dense
 			@click="emit('delete')"
+			tabindex="-1"
 		/>
 	</q-td>
 </q-tr>

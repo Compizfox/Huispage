@@ -60,73 +60,87 @@
 				:disable="readOnly"
 			/>
 
-			<div class="col-12 row justify-end">
-				<q-btn-group>
-					<q-btn
-						color="secondary"
-						no-caps
-						@click="setDebitorAmounts(0)"
-					>
-						{{  t('all_to_0') }}
-					</q-btn>
-					<q-btn
-						color="secondary"
-						no-caps
-						@click="setDebitorAmounts(1)"
-					>
-						{{ t('all_to_1') }}
-					</q-btn>
-				</q-btn-group>
+			<div class="col-12">
+				<q-card>
+					<q-card-section class="row justify-between">
+						<div class="text-h6">{{ t('debitors') }}</div>
+
+						<div class="row items-center q-gutter-sm">
+							<div class="row justify-end">
+								<q-btn-group>
+									<q-btn
+										color="secondary"
+										no-caps
+										@click="setDebitorAmounts(0)"
+									>
+										{{ t('all_to_0') }}
+									</q-btn>
+									<q-btn
+										color="secondary"
+										no-caps
+										@click="setDebitorAmounts(1)"
+									>
+										{{ t('all_to_1') }}
+									</q-btn>
+								</q-btn-group>
+							</div>
+							<q-icon
+								name="error"
+								color="negative"
+								size="24px"
+								:class="{invisible: !v.debitors.$error}"
+							/>
+						</div>
+					</q-card-section>
+					<q-card-section>
+						<div
+							class="responsive-grid col q-col-gutter-x-lg q-col-gutter-y-sm"
+						>
+							<div
+								v-for="debitor in expense.debitors"
+								:key="debitor.inhabitant"
+								class="row no-wrap q-col-gutter-x-md items-center"
+							>
+								<div style="flex-grow: 1">
+									<q-chip>
+										{{ inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname }}
+									</q-chip>
+								</div>
+
+								<div>
+									<q-btn-group rounded dense>
+										<q-btn
+											@click="debitor.amount--"
+											icon="remove"
+											padding="6px"
+											dense
+										/>
+										<q-input
+											square
+											outlined
+											type="number"
+											v-model.number="debitor.amount"
+											mask="#"
+											:disable="disable(debitor.inhabitant)"
+											size="1"
+											hide-bottom-space
+											dense
+										/>
+										<q-btn
+											@click="debitor.amount++"
+											icon="add"
+											padding="6px"
+											dense
+										/>
+									</q-btn-group>
+								</div>
+							</div>
+						</div>
+					</q-card-section>
+				</q-card>
 			</div>
 
-			<q-field
-				class="col-12"
-				outlined
-				:error="v.debitors.$error"
-				hide-bottom-space
-				dense
-			>
-				<div
-					class="responsive-grid col q-col-gutter-x-lg q-col-gutter-y-sm q-py-md"
-				>
-					<div
-						v-for="debitor in expense.debitors"
-						:key="debitor.inhabitant"
-						class="row no-wrap q-col-gutter-x-md items-center"
-					>
-						<div style="flex-grow: 1">
-							<q-chip>
-								{{ inhabitantsStore.inhabitants.find(x => x.id === debitor.inhabitant).nickname }}
-							</q-chip>
-						</div>
-
-						<div>
-							<q-btn-group rounded dense>
-								<q-btn
-									@click="debitor.amount--"
-									icon="remove"
-									padding="6px"
-								/>
-								<q-input
-									borderless
-									type="number"
-									v-model.number="debitor.amount"
-									mask="#"
-									:disable="disable(debitor.inhabitant)"
-									size="1"
-								/>
-								<q-btn
-									@click="debitor.amount++"
-									icon="add"
-									padding="6px"
-								/>
-							</q-btn-group>
-						</div>
-					</div>
-				</div>
-			</q-field>
-
-			<div>
+			<div class="col-12">
 				<ExpenseItemsTable v-model="expense.items"/>
 			</div>
 

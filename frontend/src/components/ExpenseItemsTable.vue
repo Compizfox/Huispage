@@ -5,6 +5,8 @@
 		:rows-per-page-options="[0]"
 		hide-header
 		hide-bottom
+		:title="t('items')"
+		title-class="text-h6"
 	>
 		<template v-slot:body="props">
 			<ExpenseItemRow v-model="model[props.rowIndex]" @delete="deleteItem(props.rowIndex)"/>
