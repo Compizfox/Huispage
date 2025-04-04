@@ -292,7 +292,7 @@ watch(
 	(items) => {
 		// Compute total amount from sum of items, if defined
 		if (items.some((item) => item.name != '' || item.cost != 0)) {
-			expense.value.total_amount = items.reduce((n, {cost}) => n + cost, 0)
+			expense.value.total_amount = +items.reduce((n, {cost}) => n + cost, 0).toFixed(2)
 		}
 	},
 	{deep: true}
