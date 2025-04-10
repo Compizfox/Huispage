@@ -3,8 +3,8 @@
 		:rows="model"
 		:columns="columns"
 		:rows-per-page-options="[0]"
-		hide-header
 		hide-bottom
+		dense
 		:title="t('items')"
 		title-class="text-h6"
 	>
@@ -30,11 +30,13 @@ const columns = [
 		name: 'name',
 		label: t('name'),
 		field: (row: ExpenseItem) => row.name,
+		align: 'left',
 	},
 	{
 		name: 'cost',
 		label: t('price'),
 		field: (row: ExpenseItem) => row.cost,
+		align: 'left',
 	},
 	{
 		name: 'actions',

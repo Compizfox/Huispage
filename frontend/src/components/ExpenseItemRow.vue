@@ -3,7 +3,6 @@
 	<q-td>
 		<q-input
 			borderless
-			:label="t('description')"
 			hide-bottom-space
 			v-model="item.name"
 			dense
@@ -15,7 +14,6 @@
 			borderless
 			type="number"
 			v-model.number="item.cost"
-			:label="t('price')"
 			mask="#.##"
 			prefix="€"
 			hide-bottom-space
@@ -35,12 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
 import {minValue, not, numeric, required, sameAs} from '@vuelidate/validators'
 import {useVuelidate} from '@vuelidate/core'
 import {computed} from 'vue'
-
-const {t} = useI18n()
 
 export interface ExpenseItem {
 	name: string,
