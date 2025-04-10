@@ -141,7 +141,10 @@
 			</div>
 
 			<div class="col-12">
-				<ExpenseItemsTable v-model="expense.items"/>
+				<ExpenseItemsTable
+					v-model="expense.items"
+					:readOnly="readOnly"
+				/>
 			</div>
 
 			<div class="row col-12 items-center justify-between">
@@ -154,7 +157,7 @@
 					prefix="€"
 					:error="v.total_amount.$error"
 					hide-bottom-space
-					:disable="readOnly || expense.items.length > 1"
+					:readonly="readOnly || expense.items.length > 1"
 					class="col"
 				/>
 				<span class="q-pa-sm">/</span>

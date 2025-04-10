@@ -9,7 +9,11 @@
 		title-class="text-h6"
 	>
 		<template v-slot:body="props">
-			<ExpenseItemRow v-model="model[props.rowIndex]" @delete="deleteItem(props.rowIndex)"/>
+			<ExpenseItemRow
+				v-model="model[props.rowIndex]"
+				@delete="deleteItem(props.rowIndex)"
+				:readOnly="readOnly"
+			/>
 		</template>
 	</q-table>
 </template>
@@ -24,6 +28,10 @@ import type {ExpenseItem} from 'components/ExpenseItemRow.vue'
 const {t} = useI18n()
 
 const model = defineModel<ExpenseItem[]>({required: true})
+
+const props = defineProps<{
+	readOnly: boolean
+}>()
 
 const columns = [
 	{

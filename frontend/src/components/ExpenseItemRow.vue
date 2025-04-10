@@ -7,6 +7,7 @@
 			v-model="item.name"
 			dense
 			:error="v.name.$error"
+			:readonly="readOnly"
 		/>
 	</q-td>
 	<q-td>
@@ -19,6 +20,7 @@
 			hide-bottom-space
 			dense
 			:error="v.cost.$error"
+			:readonly="readOnly"
 		/>
 	</q-td>
 	<q-td>
@@ -27,6 +29,7 @@
 			dense
 			@click="emit('delete')"
 			tabindex="-1"
+			:hidden="readOnly"
 		/>
 	</q-td>
 </q-tr>
@@ -45,6 +48,10 @@ export interface ExpenseItem {
 const item = defineModel<ExpenseItem>({required: true})
 
 const emit = defineEmits(['delete'])
+
+const props = defineProps<{
+	readOnly: boolean
+}>()
 
 const validations = computed(() => {
 	if (item.value.name != '' || item.value.cost != 0) {
