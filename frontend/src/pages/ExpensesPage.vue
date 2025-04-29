@@ -38,35 +38,96 @@
 			:rows-per-page-options="[25, 50, 100, 0]"
 			@request="onRequest"
 		>
-			<template #body-cell-category="props">
-				<q-td :props="props">
-					<q-icon
-						:name="expenseCategoriesStore.expenseCategories.find(x => x.id === props.row.category).icon"
-						size="2em">
-						<q-tooltip>
-							{{ expenseCategoriesStore.expenseCategories.find(x => x.id === props.row.category).name }}
-						</q-tooltip>
-					</q-icon>
-				</q-td>
-			</template>
+			<template #body="props">
+				<q-tr :props="props">
+					<!-- category -->
+					<q-td>
+						<q-icon
+							:name="expenseCategoriesStore.expenseCategories.find(x => x.id === props.row.category)!.icon"
+							size="2em">
+							<q-tooltip>
+								{{ expenseCategoriesStore.expenseCategories.find(x => x.id === props.row.category)!.name }}
+							</q-tooltip>
+						</q-icon>
+					</q-td>
 
-			<template #body-cell-edit="props">
-				<q-td :props="props">
-					<router-link :to="{ name: 'expenseDetail', params: { id: props.row.id }}">
-						<q-icon name="open_in_new"/>
-					</router-link>
-				</q-td>
-			</template>
+					<!-- updated_at -->
+					<q-td>
+						{{ props.cols[1].value }}
+					</q-td>
 
-			<template v-for="inhabitantSlot in inhabitantSlots" #[inhabitantSlot]="props" :key="inhabitantSlot">
-				<q-td :props="props">
-					<q-badge
-						:class="{ 'bg-deep-orange': props.col.name === props.row.creditor_name }"
-						v-if="props.value || props.col.name === props.row.creditor_name"
-					>
-						{{ props.value }}
-					</q-badge>
-				</q-td>
+					<!-- date -->
+					<q-td>
+						{{ props.cols[2].value }}
+					</q-td>
+
+					<!-- description -->
+					<q-td>
+						<div class="row justify-between">
+							{{ props.cols[3].value }}
+							<q-btn
+								size="xs"
+								dense
+								@click="props.expand = !props.expand"
+								:icon="props.expand ? 'unfold_less' : 'unfold_more'"
+								v-if="props.row.items.length > 0"
+							/>
+						</div>
+					</q-td>
+
+					<!-- total_amount -->
+					<q-td>
+						{{ props.cols[4].value }}
+					</q-td>
+
+					<!-- unit_price -->
+					<q-td>
+						{{ props.cols[5].value }}
+					</q-td>
+
+					<template v-for="inhabitant in getInhabitants" :key="inhabitant">
+						<q-td>
+							<q-badge
+								:class="{'bg-deep-orange': inhabitant.id === props.row.creditor_id}"
+								v-if="props.row.debitors.find(x => x.inhabitant === inhabitant.id).amount > 0 ||
+								inhabitant.id === props.row.creditor_id"
+							>
+								{{ props.row.debitors.find(x => x.inhabitant === inhabitant.id)?.amount }}
+							</q-badge>
+						</q-td>
+					</template>
+
+					<q-td>
+						<router-link :to="{ name: 'expenseDetail', params: { id: props.row.id }}">
+							<q-icon name="open_in_new"/>
+						</router-link>
+					</q-td>
+				</q-tr>
+				<q-tr
+					v-for="(item, index) in props.row.items"
+					v-show="props.expand"
+					:props="props"
+					class="item-row"
+				>
+					<q-td :class="{'hide-border': index !== props.row.items.length -1}"/>
+					<q-td :class="{'hide-border': index !== props.row.items.length -1}"/>
+					<q-td
+						:class="{'hide-border': index !== props.row.items.length -1}"
+						class="border-right"
+					/>
+					<q-td>
+						{{ item.name }}
+					</q-td>
+					<q-td>
+						{{ item.cost.toFixed(2) }}
+					</q-td>
+					<q-td :class="{'hide-border': index !== props.row.items.length -1}"/>
+					<q-td
+						v-for="inhabitant in getInhabitants"
+						:class="{'hide-border': index !== props.row.items.length -1}"
+					/>
+					<q-td :class="{'hide-border': index !== props.row.items.length -1}"/>
+				</q-tr>
 			</template>
 
 			<template #top-left>
@@ -286,3 +347,22 @@ onBeforeRouteUpdate(() => {
 	fetch()
 })
 </script>
+
+<style scoped>
+tr.item-row {
+	height: unset !important;
+}
+
+.item-row td {
+	padding: 0 8px;
+	height: unset !important;
+}
+
+.item-row td.hide-border {
+	border-bottom: 0;
+}
+
+.item-row td.border-right {
+	border-right: 1px solid lightgray;
+}
+</style>
