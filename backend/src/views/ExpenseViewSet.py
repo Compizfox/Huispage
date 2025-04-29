@@ -34,6 +34,7 @@ class Pagination(PageNumberPagination):
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
+	queryset = Expense.objects.prefetch_related('items', 'debitors')
 	filter_backends = [DjangoFilterBackend, OrderingFilter]
 	filterset_fields = ['category', 'creditor', 'debitors']
 	ordering = ['-date', '-updated_at']
