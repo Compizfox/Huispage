@@ -5,10 +5,14 @@
 		:rows-per-page-options="[0]"
 		hide-bottom
 		dense
-		:title="t('items')"
-		title-class="text-h6"
 	>
-		<template v-slot:body="props">
+		<template #top>
+			<div class="text-h6">
+				<q-icon name="list"/>
+				{{ t('items') }}
+			</div>
+		</template>
+		<template #body="props">
 			<ExpenseItemRow
 				v-model="model[props.rowIndex]"
 				@delete="deleteItem(props.rowIndex)"

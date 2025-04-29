@@ -63,7 +63,10 @@
 			<div class="col-12">
 				<q-card>
 					<q-card-section class="row justify-between">
-						<div class="text-h6">{{ t('debitors') }}</div>
+						<div class="text-h6">
+							<q-icon name="group" />
+							{{ t('debitors') }}
+						</div>
 
 						<div class="row items-center q-gutter-sm">
 							<div class="row justify-end">
