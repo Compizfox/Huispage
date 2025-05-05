@@ -41,7 +41,7 @@
 			<template #body="props">
 				<q-tr :props="props">
 					<!-- category -->
-					<q-td>
+					<q-td class="text-center">
 						<q-icon
 							:name="expenseCategoriesStore.expenseCategories.find(x => x.id === props.row.category)!.icon"
 							size="2em">
@@ -52,17 +52,17 @@
 					</q-td>
 
 					<!-- updated_at -->
-					<q-td>
+					<q-td class="text-left">
 						{{ props.cols[1].value }}
 					</q-td>
 
 					<!-- date -->
-					<q-td>
+					<q-td class="text-left">
 						{{ props.cols[2].value }}
 					</q-td>
 
 					<!-- description -->
-					<q-td>
+					<q-td class="text-left">
 						<div class="row justify-between">
 							{{ props.cols[3].value }}
 							<q-btn
@@ -76,17 +76,17 @@
 					</q-td>
 
 					<!-- total_amount -->
-					<q-td>
+					<q-td class="text-right">
 						{{ props.cols[4].value }}
 					</q-td>
 
 					<!-- unit_price -->
-					<q-td>
+					<q-td class="text-right">
 						{{ props.cols[5].value }}
 					</q-td>
 
 					<template v-for="inhabitant in getInhabitants" :key="inhabitant">
-						<q-td>
+						<q-td class="text-center">
 							<q-badge
 								:class="{'bg-deep-orange': inhabitant.id === props.row.creditor_id}"
 								v-if="props.row.debitors.find(x => x.inhabitant === inhabitant.id).amount > 0 ||
@@ -115,10 +115,10 @@
 						:class="{'hide-border': index !== props.row.items.length -1}"
 						class="border-right"
 					/>
-					<q-td>
+					<q-td class="text-left">
 						{{ item.name }}
 					</q-td>
-					<q-td>
+					<q-td class="text-right">
 						{{ item.cost.toFixed(2) }}
 					</q-td>
 					<q-td :class="{'hide-border': index !== props.row.items.length -1}"/>
@@ -238,6 +238,7 @@ const columns = computed(() => [
 		name: 'updated_at',
 		required: true,
 		label: t('added_at'),
+		align: 'left',
 		sortable: true,
 		sortOrder: 'da',
 		field: (row: Expense) => row.updated_at,
